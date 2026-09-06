@@ -1,0 +1,50 @@
+import type { Customer } from "@/lib/types";
+
+export const customers: Customer[] = [
+  {
+    id: "cust-001",
+    name: "Priya Sharma",
+    email: "priya.sharma@email.com",
+    phone: "+91 98765 43210",
+    city: "Bangalore",
+    dateOfBirth: "1995-08-12",
+    licenceNumber: "KA01 20150012345",
+    totalBookings: 3,
+    lastBookingDate: "2026-02-20",
+    status: "active",
+    documents: [
+      {
+        id: "doc-001",
+        type: "driving_licence",
+        fileName: "licence_priya.pdf",
+        status: "verified",
+        uploadedAt: "2025-10-01T10:00:00Z",
+      },
+    ],
+    createdAt: "2025-10-01T10:00:00Z",
+  },
+  {
+    id: "cust-002",
+    name: "Arjun Mehta",
+    email: "arjun.mehta@email.com",
+    phone: "+91 87654 32109",
+    city: "Mumbai",
+    totalBookings: 2,
+    lastBookingDate: "2026-01-15",
+    status: "active",
+    documents: [],
+    createdAt: "2025-11-20T10:00:00Z",
+  },
+  {
+    id: "cust-003",
+    name: "Rahul K.",
+    email: "rahul.k@email.com",
+    phone: "+91 76543 21098",
+    city: "Pune",
+    totalBookings: 1,
+    lastBookingDate: "2025-12-05",
+    status: "active",
+    documents: [],
+    createdAt: "2025-12-01T10:00:00Z",
+  },
+];
