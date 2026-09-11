@@ -365,6 +365,15 @@
       max-width: 100%;
     }
 
+      .booking-search-bar .booking-control,
+      .booking-search-bar .booking-action {
+        min-height: 3.5rem;
+      }
+
+      .booking-search-bar .booking-action {
+        margin-top: 0.25rem;
+      }
+
     .admin-shell main {
       padding: 0.75rem;
     }
