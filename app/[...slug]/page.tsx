@@ -5,6 +5,7 @@ import { PublicPackageDetailsPage, PublicPackagesPage } from "@/components/Publi
 import { AdminDashboardUpgrade } from "@/components/AdminDashboardUpgrade";
 import { LiveAdminModule, type Section } from "@/components/LiveAdminModule";
 import { RealBookingPage } from "@/components/RealBookingPage";
+import { LiveVehiclesPage } from "@/components/LiveVehiclesPage";
 import { Footer, Header, WhatsAppCTA } from "@/components/navigation";
 import { createClient } from "@/utils/supabase/server";
 
@@ -23,6 +24,7 @@ export default async function CatchAllPage({ params }: { params: Promise<{ slug:
   if (slug.join("/") === "book") return <><Header /><main><RealBookingPage /></main><Footer /><WhatsAppCTA /></>;
   if (slug.join("/") === "admin") return <main className="admin-shell"><AdminDashboardUpgrade /></main>;
   if (slug.join("/") === "admin/packages") return <main className="admin-shell"><AdminPackagesPage /></main>;
+  if (slug.join("/") === "admin/vehicles") return <main className="admin-shell"><LiveVehiclesPage /></main>;
   const liveSections = ["customers", "bookings", "reviews", "offers", "destinations", "availability", "pricing", "settings"];
   if (isAdminRoute && slug[1] && liveSections.includes(slug[1])) return <main className="admin-shell"><LiveAdminModule section={slug[1] as Section} /></main>;
   if (isAdminRoute) return <main className="admin-shell"><PlatformScreen slug={slug} /></main>;

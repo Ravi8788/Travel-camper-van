@@ -12,9 +12,9 @@ type Action =
 type VansStoreValue = {
   vehicles: Vehicle[];
   savedVanIds: string[];
-  addVan: (vehicle: Vehicle) => void;
-  updateVan: (vehicle: Vehicle) => void;
-  deleteVan: (id: string) => void;
+  addVan: (vehicle: Vehicle) => Promise<Vehicle>;
+  updateVan: (vehicle: Vehicle) => Promise<Vehicle>;
+  deleteVan: (id: string) => Promise<void>;
   toggleSavedVan: (id: string) => void;
 };
 
@@ -33,9 +33,9 @@ export function VansProvider({ children }: { children: ReactNode }) {
   const value = useMemo(() => ({
     vehicles,
     savedVanIds,
-    addVan: (vehicle: Vehicle) => { dispatch({ type: "add", vehicle }); void createVehicle(vehicle).catch(() => dispatch({ type: "delete", id: vehicle.id })); },
-    updateVan: (vehicle: Vehicle) => { dispatch({ type: "update", vehicle }); void updateVehicle(vehicle).catch(() => undefined); },
-    deleteVan: (id: string) => { dispatch({ type: "delete", id }); void deleteVehicle(id).catch(() => undefined); },
+    addVan: async (vehicle: Vehicle) => { const saved = await createVehicle(vehicle); dispatch({ type: "add", vehicle: saved }); return saved; },
+    updateVan: async (vehicle: Vehicle) => { const saved = await updateVehicle(vehicle); dispatch({ type: "update", vehicle: saved }); return saved; },
+    deleteVan: async (id: string) => { await deleteVehicle(id); dispatch({ type: "delete", id }); },
     toggleSavedVan: (id: string) => setSavedVanIds((current) => current.includes(id) ? current.filter((savedId) => savedId !== id) : [...current, id]),
   }), [vehicles, savedVanIds]);
   return <VansContext.Provider value={value}>{children}</VansContext.Provider>;
