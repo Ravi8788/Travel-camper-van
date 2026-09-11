@@ -225,4 +225,101 @@
   .admin-shell .rounded-lg.border-slate-200.bg-white:hover {
     @apply shadow-[0_8px_24px_rgb(15_23_42/0.07)];
   }
+  @media (max-width: 639px) {
+    input[type="date"] {
+      min-width: 0;
+      width: 100%;
+      font-size: 0.875rem;
+      color-scheme: light;
+    }
+
+    input[type="date"]::-webkit-date-and-time-value {
+      min-width: 0;
+      text-align: left;
+    }
+
+    .booking-search-bar {
+      width: 100%;
+      overflow: visible;
+    }
+
+    .admin-shell main {
+      padding: 0.75rem;
+    }
+
+    .admin-shell header > div {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .admin-shell header > div p:first-child {
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+    }
+
+    .admin-shell header > nav {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+
+    .admin-shell .admin-page > div:first-child {
+      margin-bottom: 1.25rem;
+    }
+
+    .admin-shell .admin-page > .mb-5.flex.gap-3 {
+      flex-direction: column;
+    }
+
+    .admin-shell .admin-page > .mb-5.flex.gap-3 > button {
+      width: 100%;
+    }
+
+    .admin-shell .admin-page h1 {
+      font-size: 1.875rem;
+    }
+
+    .admin-shell .admin-page > .rounded-xl {
+      padding: 0.75rem;
+    }
+
+    .admin-shell .admin-page > .rounded-xl > .p-6,
+    .admin-shell .admin-page > .rounded-xl > .p-7,
+    .admin-shell .admin-page > .rounded-xl > .p-8 {
+      padding: 0.75rem;
+    }
+
+    .admin-shell .admin-page form {
+      gap: 0.75rem;
+    }
+
+    .admin-shell .admin-page .space-y-5 > :not([hidden]) ~ :not([hidden]) {
+      margin-top: 0.75rem;
+    }
+
+    .admin-shell .admin-page .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+      margin-top: 0.75rem;
+    }
+
+    .admin-shell .admin-page .bg-slate-50.p-4 {
+      padding: 0.75rem;
+    }
+
+    .admin-shell .admin-page .mb-8 {
+      margin-bottom: 1rem;
+    }
+
+    .admin-shell .admin-page .mb-6 {
+      margin-bottom: 1rem;
+    }
+
+    .admin-shell .rounded-lg.border-slate-200.bg-white {
+      border-radius: 0.75rem;
+    }
+
+    .admin-shell table tbody td,
+    .admin-shell table thead th {
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+  }
 }

@@ -8,6 +8,7 @@ export const PUBLIC_NAV_LINKS = [
   { href: "/vans", label: "Our Vans" },
   { href: "/how-it-works", label: "How It Works" },
   { href: "/destinations", label: "Destinations" },
+  { href: "/packages", label: "Packages" },
   { href: "/offers", label: "Offers" },
   { href: "/reviews", label: "Reviews" },
   { href: "/faq", label: "FAQ" },

@@ -11,10 +11,13 @@ import { formatCurrency } from "@/lib/utils";
 import { PICKUP_LOCATIONS } from "@/lib/constants";
 import type { Vehicle } from "@/lib/types";
 import { DestinationsPage, HowItWorksPage, VanDetailsPage, VansPage } from "@/components/PublicPages";
-import { AdminDashboardPage, AuthPage, BookingPage, ContactPage, CustomerDashboardPage, FAQPage, OffersPage, ReviewsPage } from "@/components/PhaseModules";
+import { AdminDashboardPage, BookingPage, ContactPage, CustomerDashboardPage, FAQPage, OffersPage, ReviewsPage } from "@/components/PhaseModules";
 import { AdminAvailabilityPage, AdminBookingsPage, AdminCustomersPage, AdminDestinationsPage, AdminOffersPage, AdminPricingPage, AdminReviewsPage, AdminSettingsPage, AdminVehiclesPage } from "@/components/AdminModules";
 import { useVansStore } from "@/lib/store/VansStore";
 import { CustomerPanel } from "@/components/CustomerPanel";
+import { SupabaseAuthPage } from "@/components/SupabaseAuthPage";
+
+const AuthPage = SupabaseAuthPage;
 
 const money = (value: number) => formatCurrency(value);
 const titleize = (value: string) => value.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
