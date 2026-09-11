@@ -4,7 +4,11 @@ export type AdminTable = "customers" | "bookings" | "reviews" | "offers" | "dest
 
 export async function getAdminRows(table: AdminTable) {
   const query = createClient().from(table).select("*");
-  const { data, error } = table === "pricing_config" || table === "business_settings" ? await query : await query.order("created_at", { ascending: false });
+  const { data, error } = table === "pricing_config" || table === "business_settings"
+    ? await query
+    : table === "availability"
+      ? await query.order("date", { ascending: true })
+      : await query.order("created_at", { ascending: false });
   if (error) throw error;
   return data ?? [];
 }
