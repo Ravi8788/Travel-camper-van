@@ -7,7 +7,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle, FormField, Input, Sel
 import { createVehicle, deleteVehicle, getVehicles } from "@/lib/services/vehicles";
 import type { Vehicle } from "@/lib/types";
 
-const blank: Vehicle = { id: "new", slug: "", name: "", model: "", description: "", shortDescription: "", pricePerDay: 0, securityDeposit: 0, passengerCapacity: 2, sleepingCapacity: 2, fuelType: "diesel", transmission: "manual", dimensions: { lengthFt: 0, widthFt: 0, heightFt: 0 }, drivingRequirements: [], amenities: [], facilities: { bedroom: [], washroom: [], kitchen: [], storage: [], charging: [] }, images: [], status: "available", featured: false, createdAt: "", updatedAt: "" };
+const blank: Vehicle = { id: "new", slug: "", name: "", model: "", registrationNumber: "", description: "", shortDescription: "", pricePerDay: 0, securityDeposit: 0, passengerCapacity: 2, sleepingCapacity: 2, fuelType: "diesel", transmission: "manual", dimensions: { lengthFt: 0, widthFt: 0, heightFt: 0 }, dimensionsText: "", drivingRequirements: [], drivingRequirementsText: "", amenities: [], facilities: { bedroom: [], washroom: [], kitchen: [], storage: [], charging: [] }, facilityDetails: { sleeping: "", kitchen: "", washroom: "", storage: "", charging: "", essentials: [] }, images: [], imageTags: { exterior: [], interior: [], kitchen: [], bedroom: [], washroom: [], storage: [] }, videoUrl: "", coverImage: "", additionalCharges: [], status: "available", featured: false, createdAt: "", updatedAt: "" };
 
 export function LiveVehiclesPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);

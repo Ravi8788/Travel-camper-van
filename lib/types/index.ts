@@ -1,6 +1,6 @@
-export type VehicleStatus = "available" | "booked" | "maintenance" | "inactive";
+export type VehicleStatus = "available" | "booked" | "on_rent" | "maintenance" | "inactive";
 
-export type FuelType = "diesel" | "petrol";
+export type FuelType = "petrol" | "diesel" | "cng" | "electric";
 export type Transmission = "manual" | "automatic";
 
 export interface VehicleDimensions {
@@ -17,11 +17,35 @@ export interface VehicleFacilities {
   charging: string[];
 }
 
+export interface VehicleFacilityDetails {
+  sleeping: string;
+  kitchen: string;
+  washroom: string;
+  storage: string;
+  charging: string;
+  essentials: string[];
+}
+
+export interface VehicleImageTags {
+  exterior: string[];
+  interior: string[];
+  kitchen: string[];
+  bedroom: string[];
+  washroom: string[];
+  storage: string[];
+}
+
+export interface VehicleAdditionalCharge {
+  name: string;
+  amount: number;
+}
+
 export interface Vehicle {
   id: string;
   slug: string;
   name: string;
   model: string;
+  registrationNumber: string;
   description: string;
   shortDescription: string;
   pricePerDay: number;
@@ -31,11 +55,17 @@ export interface Vehicle {
   fuelType: FuelType;
   transmission: Transmission;
   dimensions: VehicleDimensions;
+  dimensionsText?: string;
   drivingRequirements: string[];
+  drivingRequirementsText?: string;
   amenities: string[];
   facilities: VehicleFacilities;
+  facilityDetails: VehicleFacilityDetails;
   images: string[];
+  imageTags: VehicleImageTags;
   videoUrl?: string;
+  coverImage?: string;
+  additionalCharges: VehicleAdditionalCharge[];
   status: VehicleStatus;
   featured: boolean;
   createdAt: string;

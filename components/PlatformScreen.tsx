@@ -15,9 +15,12 @@ import { AdminDashboardPage, BookingPage, ContactPage, CustomerDashboardPage, FA
 import { AdminAvailabilityPage, AdminBookingsPage, AdminCustomersPage, AdminDestinationsPage, AdminOffersPage, AdminPricingPage, AdminReviewsPage, AdminSettingsPage, AdminVehiclesPage } from "@/components/AdminModules";
 import { useVansStore } from "@/lib/store/VansStore";
 import { CustomerPanel } from "@/components/CustomerPanel";
-import { SupabaseAuthPage } from "@/components/SupabaseAuthPage";
-
-const AuthPage = SupabaseAuthPage;
+import {
+  AdminLoginPage,
+  CustomerForgotPasswordPage,
+  CustomerLoginPage,
+  CustomerRegisterPage,
+} from "@/components/auth/CustomerAuthPages";
 
 const money = (value: number) => formatCurrency(value);
 const titleize = (value: string) => value.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -84,5 +87,13 @@ export function PlatformScreen({ slug }: { slug: string[] }) {
   const searchParams = useSearchParams();
   const { vehicles } = useVansStore();
   const path = slug.join("/"); const detail = path.startsWith("vans/") ? vehicles.find((vehicle) => vehicle.slug === slug[1]) : undefined;
-  if (path === "vans") return <VansPage />; if (detail) return <VanDetailsPage vehicle={detail} />; if (path === "destinations" || path.startsWith("destinations/")) return <DestinationsPage />; if (path === "how-it-works") return <HowItWorksPage />; if (path === "offers") return <OffersPage />; if (path === "reviews") return <ReviewsPage />; if (path === "faq") return <FAQPage />; if (path === "contact") return <ContactPage />; if (path === "book" && searchParams.get("ready") !== "1") return <AuthPage mode="login" nextPath="/book?ready=1" />; if (path === "book") return <BookingPage />; if (path === "login") return <AuthPage mode="login" />; if (path === "signup") return <AuthPage mode="signup" />; if (path === "forgot-password") return <AuthPage mode="forgot" />; if (path === "account" || path.startsWith("account/")) return <CustomerPanel />; if (path === "admin/login") return <AuthPage mode="login" admin />; if (path === "admin/vehicles") return <AdminVehiclesPage />; if (path === "admin/bookings") return <AdminBookingsPage />; if (path === "admin/availability") return <AdminAvailabilityPage />; if (path === "admin/pricing") return <AdminPricingPage />; if (path === "admin/customers") return <AdminCustomersPage />; if (path === "admin/reviews") return <AdminReviewsPage />; if (path === "admin/offers") return <AdminOffersPage />; if (path === "admin/destinations") return <AdminDestinationsPage />; if (path === "admin/settings") return <AdminSettingsPage />; if (path === "admin" || path.startsWith("admin/")) return <AdminDashboardPage />; if (["cancellation-policy", "self-drive"].includes(path)) return <ContentPage kind={path} />; return <ContentPage kind={path || "travel"} />;
+  if (path === "vans") return <VansPage />; if (detail) return <VanDetailsPage vehicle={detail} />; if (path === "destinations" || path.startsWith("destinations/")) return <DestinationsPage />; if (path === "how-it-works") return <HowItWorksPage />; if (path === "offers") return <OffersPage />; if (path === "reviews") return <ReviewsPage />; if (path === "faq") return <FAQPage />; if (path === "contact") return <ContactPage />;
+  if (path === "book" && searchParams.get("ready") !== "1") return <CustomerLoginPage />;
+  if (path === "book") return <BookingPage />;
+  if (path === "login") return <CustomerLoginPage />;
+  if (path === "register") return <CustomerRegisterPage />;
+  if (path === "forgot-password") return <CustomerForgotPasswordPage />;
+  if (path === "account" || path.startsWith("account/")) return <CustomerPanel />;
+  if (path === "admin/login") return <AdminLoginPage />;
+  if (path === "admin/vehicles") return <AdminVehiclesPage />; if (path === "admin/bookings") return <AdminBookingsPage />; if (path === "admin/availability") return <AdminAvailabilityPage />; if (path === "admin/pricing") return <AdminPricingPage />; if (path === "admin/customers") return <AdminCustomersPage />; if (path === "admin/reviews") return <AdminReviewsPage />; if (path === "admin/offers") return <AdminOffersPage />; if (path === "admin/destinations") return <AdminDestinationsPage />; if (path === "admin/settings") return <AdminSettingsPage />; if (path === "admin" || path.startsWith("admin/")) return <AdminDashboardPage />; if (["cancellation-policy", "self-drive"].includes(path)) return <ContentPage kind={path} />; return <ContentPage kind={path || "travel"} />;
 }

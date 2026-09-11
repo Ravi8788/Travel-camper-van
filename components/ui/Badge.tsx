@@ -43,6 +43,7 @@ const statusMap: Record<string, keyof typeof variants> = {
   completed: "forest",
   pending: "warning",
   booked: "accent",
+  on_rent: "warning",
   cancelled: "error",
   rejected: "error",
   maintenance: "warning",

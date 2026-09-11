@@ -17,6 +17,10 @@ export type BookingInput = {
 
 export async function createBooking(input: BookingInput) {
   const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Please log in as a customer before creating a booking.");
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
+  if (profile?.role !== "customer") throw new Error("Please log in with a customer account before creating a booking.");
   const { data: conflicts, error: conflictError } = await supabase.from("bookings").select("id").eq("vehicle_id", input.vehicle_id).in("status", ["pending", "confirmed"]).lte("start_date", input.end_date).gte("end_date", input.start_date);
   if (conflictError) throw conflictError;
   if (conflicts && conflicts.length > 0) throw new Error("Those dates are no longer available. Please choose different dates.");
