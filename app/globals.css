@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Travel editorial palette: charcoal, warm paper, forest, terracotta. */
+  /* ─── Travel editorial palette ─── */
   --color-ink: #0f0e0c;
   --color-ink-soft: #1a1814;
   --color-ink-muted: #2a2620;
@@ -40,17 +40,17 @@
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
-  /* Type scale */
-  --text-display-sm: 2.25rem;
-  --text-display-sm--line-height: 0.98;
-  --text-display: clamp(3.5rem, 7vw, 5.5rem);
-  --text-display--line-height: 0.92;
-  --text-title: clamp(2.25rem, 4vw, 3.5rem);
-  --text-title--line-height: 1;
-  --text-heading: 1.5rem;
-  --text-heading--line-height: 1.1;
+  /* Type scale — BBS-style compact panels, still Gen-Z */
+  --text-display-sm: 1.5rem;
+  --text-display-sm--line-height: 1.15;
+  --text-display: clamp(1.85rem, 3.6vw, 3.15rem);
+  --text-display--line-height: 1.08;
+  --text-title: clamp(1.4rem, 2.2vw, 2rem);
+  --text-title--line-height: 1.2;
+  --text-heading: clamp(1.15rem, 1.6vw, 1.4rem);
+  --text-heading--line-height: 1.3;
   --text-copy: 1rem;
-  --text-copy--line-height: 1.65;
+  --text-copy--line-height: 1.6;
 
   /* Spacing scale extensions */
   --spacing-18: 4.5rem;
@@ -65,10 +65,11 @@
   --radius-2xl: 1.75rem;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-soft: 0 4px 24px -4px rgb(15 14 12 / 0.08);
-  --shadow-card: 0 8px 32px -8px rgb(15 14 12 / 0.12);
-  --shadow-elevated: 0 16px 48px -12px rgb(15 14 12 / 0.18);
+  /* Shadows — premium layered depth */
+  --shadow-soft: 0 2px 12px -3px rgb(15 14 12 / 0.06), 0 1px 3px -1px rgb(15 14 12 / 0.04);
+  --shadow-card: 0 8px 30px -8px rgb(15 14 12 / 0.10), 0 2px 8px -2px rgb(15 14 12 / 0.05);
+  --shadow-elevated: 0 20px 50px -16px rgb(15 14 12 / 0.18), 0 4px 12px -4px rgb(15 14 12 / 0.06);
+  --shadow-glow: 0 0 40px -10px rgb(249 115 22 / 0.25);
 
   /* Animation */
   --animate-fade-in: fade-in 0.5s ease-out forwards;
@@ -77,60 +78,52 @@
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ─── Keyframes ─── */
+
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 @keyframes auth-drift {
-  from {
-    transform: translate3d(-2%, -2%, 0) rotate(0deg);
-  }
-  to {
-    transform: translate3d(2%, 2%, 0) rotate(8deg);
-  }
+  from { transform: translate3d(-2%, -2%, 0) rotate(0deg); }
+  to { transform: translate3d(2%, 2%, 0) rotate(8deg); }
 }
 
 @keyframes auth-pulse {
-  0%,
-  100% {
-    opacity: 0.24;
-  }
-  50% {
-    opacity: 0.52;
-  }
+  0%, 100% { opacity: 0.24; }
+  50% { opacity: 0.52; }
 }
 
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Base layer ─── */
+
 @layer base {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     border-color: var(--color-sand-200);
   }
 
@@ -138,20 +131,16 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   body {
-    @apply bg-sand-50 text-ink font-body antialiased;
+    @apply bg-sand-50 text-ink font-body antialiased overflow-x-hidden;
     font-size: var(--text-copy);
     line-height: var(--text-copy--line-height);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight text-ink;
   }
 
@@ -162,39 +151,145 @@
   ::selection {
     @apply bg-accent-200 text-ink;
   }
+
+  img, video {
+    max-width: 100%;
+  }
 }
+
+/* ─── Utilities ─── */
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 
+  /* ── Spacing & Layout ── */
+
   .section-padding {
-    @apply px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24 xl:py-30;
+    @apply px-2.5 py-6 sm:px-3 sm:py-8 lg:px-4 lg:py-10;
   }
 
+  /* Full-screen fit layout with tighter edge gutters */
   .container-wide {
-    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-[1480px] px-2.5 sm:px-3 lg:px-4;
   }
 
   .container-narrow {
-    @apply mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-3xl px-4 sm:px-5 lg:px-6;
+  }
+
+  .panel {
+    @apply rounded-2xl border border-sand-200 bg-white p-4 shadow-soft sm:p-5;
   }
 
   .editorial-grid {
     @apply grid gap-8 lg:grid-cols-12 lg:gap-12;
   }
 
+  /* ── Typography ── */
+
+  .display-type {
+    font-size: var(--text-display);
+    line-height: var(--text-display--line-height);
+    letter-spacing: -0.04em;
+  }
+
+  .title-type {
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+    letter-spacing: -0.035em;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.2em] text-accent-600;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-forest-600 via-forest-500 to-accent-600 bg-clip-text text-transparent;
+  }
+
+  /* ── Glass & Surface ── */
+
+  .glass {
+    background: rgb(15 14 12 / 0.75);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
+    border: 1px solid rgb(255 255 255 / 0.08);
+  }
+
+  .glass-light {
+    background: rgb(250 247 242 / 0.80);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid rgb(232 223 208 / 0.5);
+  }
+
+  .surface-grain {
+    position: relative;
+  }
+
+  .surface-grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    border-radius: inherit;
+  }
+
+  /* ── Card hover ── */
+
+  .card-hover {
+    @apply transition-all duration-500 ease-[var(--ease-editorial)];
+  }
+
+  .card-hover:hover {
+    @apply -translate-y-1.5 shadow-elevated;
+  }
+
+  .card-hover:hover img {
+    transform: scale(1.06);
+  }
+
+  /* ── Image treatment ── */
+
+  .img-zoom {
+    @apply transition-transform duration-700 ease-[var(--ease-editorial)];
+  }
+
+  .group:hover .img-zoom,
+  .img-zoom:hover {
+    transform: scale(1.06);
+  }
+
+  /* ── Scroll reveal ── */
+
   .scroll-reveal {
     animation: slide-up 0.6s ease-out forwards;
   }
+
+  /* ── Ticker animation ── */
+
+  .ticker-track {
+    animation: ticker 25s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+    }
+  }
+
+  /* ─── Auth pages ─── */
 
   .auth-shell {
     animation: scale-in 0.55s var(--ease-editorial) both;
   }
 
   .auth-customer-page {
-    background: #f1f3ff;
+    background: linear-gradient(135deg, #f8f6f1 0%, #f1ece2 50%, #eee8db 100%);
   }
 
   .auth-admin-page {
@@ -202,8 +297,11 @@
   }
 
   .auth-customer-page .auth-visual {
-    background: #293b8f;
-    background-image: radial-gradient(circle at 78% 22%, rgb(255 102 75 / 0.9), transparent 0 18%), linear-gradient(145deg, #293b8f 0%, #17245d 100%);
+    background: #183f31;
+    background-image:
+      radial-gradient(circle at 20% 80%, rgb(249 115 22 / 0.15), transparent 50%),
+      radial-gradient(circle at 80% 20%, rgb(45 107 79 / 0.3), transparent 50%),
+      linear-gradient(160deg, #183f31 0%, #0f0e0c 100%);
   }
 
   .auth-admin-page .auth-visual {
@@ -211,21 +309,20 @@
     background-image: radial-gradient(circle at 78% 20%, rgb(166 255 112 / 0.58), transparent 0 18%), linear-gradient(145deg, #152033 0%, #090e1b 100%);
   }
 
-  .auth-customer-page .auth-grid {
-    background-image: linear-gradient(rgb(255 255 255 / 0.12) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.12) 1px, transparent 1px);
-  }
-
+  .auth-customer-page .auth-grid,
   .auth-admin-page .auth-grid {
-    background-image: linear-gradient(rgb(166 255 112 / 0.1) 1px, transparent 1px), linear-gradient(90deg, rgb(166 255 112 / 0.1) 1px, transparent 1px);
+    background-image: linear-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
   }
 
   .auth-customer-page .auth-shell {
-    box-shadow: 0 24px 80px -28px rgb(41 59 143 / 0.45);
+    box-shadow: 0 32px 80px -20px rgb(15 14 12 / 0.25);
   }
 
   .auth-grid {
-    background-image: linear-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.09) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-image: linear-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
     mask-image: linear-gradient(to bottom, black, transparent 85%);
   }
 
@@ -242,21 +339,10 @@
     animation: slide-up 0.45s var(--ease-editorial) both;
   }
 
-  .auth-shell form > *:nth-child(2) {
-    animation-delay: 70ms;
-  }
-
-  .auth-shell form > *:nth-child(3) {
-    animation-delay: 140ms;
-  }
-
-  .auth-shell form > *:nth-child(4) {
-    animation-delay: 210ms;
-  }
-
-  .auth-shell form > *:nth-child(5) {
-    animation-delay: 280ms;
-  }
+  .auth-shell form > *:nth-child(2) { animation-delay: 70ms; }
+  .auth-shell form > *:nth-child(3) { animation-delay: 140ms; }
+  .auth-shell form > *:nth-child(4) { animation-delay: 210ms; }
+  .auth-shell form > *:nth-child(5) { animation-delay: 280ms; }
 
   .auth-shell input,
   .auth-shell button,
@@ -266,7 +352,7 @@
 
   .auth-shell input:focus {
     transform: translateY(-1px);
-    box-shadow: 0 10px 24px -16px rgb(249 115 22 / 0.7);
+    box-shadow: 0 8px 24px -10px rgb(249 115 22 / 0.35);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -277,32 +363,22 @@
     }
   }
 
-  .gradient-text {
-    @apply bg-gradient-to-r from-forest-600 via-forest-500 to-accent-600 bg-clip-text text-transparent;
+  /* ─── Customer panel ─── */
+
+  .customer-shell {
+    @apply h-screen overflow-hidden bg-sand-100;
   }
 
-  .display-type {
-    font-size: var(--text-display);
-    line-height: var(--text-display--line-height);
-    letter-spacing: -0.04em;
-  }
-
-  .title-type {
-    font-size: var(--text-title);
-    line-height: var(--text-title--line-height);
-    letter-spacing: -0.035em;
-  }
-
-  .eyebrow {
-    @apply text-sm font-bold uppercase tracking-[0.18em] text-accent-600;
+  .customer-panel {
+    @apply h-screen overflow-hidden;
   }
 
   .customer-panel .customer-card {
-    @apply border-sand-200 bg-sand-50 shadow-soft transition-all duration-300;
+    @apply border-sand-200 bg-sand-50 shadow-soft transition-all duration-500 ease-[var(--ease-editorial)];
   }
 
   .customer-panel .customer-card:hover {
-    @apply shadow-card;
+    @apply -translate-y-0.5 shadow-card;
   }
 
   .customer-panel .customer-list-row {
@@ -313,8 +389,48 @@
     @apply -translate-y-0.5 bg-sand-50 shadow-soft;
   }
 
+  .customer-panel .customer-metric {
+    @apply overflow-hidden;
+  }
+
+  .customer-panel .customer-metric::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent-500), var(--color-forest-500));
+    border-radius: 9999px 9999px 0 0;
+  }
+
+  .vans-page-content {
+    padding-top: 3.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+    .vans-filter-panel {
+      position: sticky;
+      top: 4.25rem;
+      z-index: 20;
+      box-shadow: 0 12px 28px -22px rgb(15 14 12 / 0.35);
+    }
+
+  @media (max-width: 767px) {
+    .vans-page-content {
+      padding-top: 2rem;
+      padding-bottom: 3rem;
+    }
+
+    .vans-filter-panel {
+      position: static;
+    }
+  }
+
+  /* ─── Admin shell ─── (PRESERVED EXACTLY) */
+
   .admin-shell {
-    @apply min-h-screen animate-fade-in;
+    @apply h-screen overflow-hidden animate-fade-in;
   }
 
   .admin-shell table tbody tr {
@@ -332,6 +448,9 @@
   .admin-shell .rounded-lg.border-slate-200.bg-white:hover {
     @apply shadow-[0_8px_24px_rgb(15_23_42/0.07)];
   }
+
+  /* ─── Responsive: mobile ─── */
+
   @media (max-width: 639px) {
     input[type="date"] {
       min-width: 0;
@@ -365,15 +484,16 @@
       max-width: 100%;
     }
 
-      .booking-search-bar .booking-control,
-      .booking-search-bar .booking-action {
-        min-height: 3.5rem;
-      }
+    .booking-search-bar .booking-control,
+    .booking-search-bar .booking-action {
+      min-height: 3.5rem;
+    }
 
-      .booking-search-bar .booking-action {
-        margin-top: 0.25rem;
-      }
+    .booking-search-bar .booking-action {
+      margin-top: 0.25rem;
+    }
 
+    /* Admin mobile (PRESERVED EXACTLY) */
     .admin-shell main {
       padding: 0.75rem;
     }
@@ -453,4 +573,29 @@
       padding-bottom: 0.75rem;
     }
   }
+}
+
+/* ─── Global & Container Visible Scrollbars ─── */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.35);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.6);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
 }

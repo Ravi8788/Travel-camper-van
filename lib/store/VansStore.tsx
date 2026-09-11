@@ -5,6 +5,7 @@ import type { Vehicle } from "@/lib/types";
 import { createVehicle, deleteVehicle, getVehicles, updateVehicle } from "@/lib/services/vehicles";
 
 type Action =
+  | { type: "hydrate"; vehicles: Vehicle[] }
   | { type: "add"; vehicle: Vehicle }
   | { type: "update"; vehicle: Vehicle }
   | { type: "delete"; id: string };
@@ -21,6 +22,9 @@ type VansStoreValue = {
 const VansContext = createContext<VansStoreValue | null>(null);
 
 function reducer(state: Vehicle[], action: Action): Vehicle[] {
+  if (action.type === "hydrate") {
+    return Array.from(new Map(action.vehicles.map((vehicle) => [vehicle.id, vehicle])).values());
+  }
   if (action.type === "add") return [...state, action.vehicle];
   if (action.type === "update") return state.map((vehicle) => vehicle.id === action.vehicle.id ? action.vehicle : vehicle);
   return state.filter((vehicle) => vehicle.id !== action.id);
@@ -29,7 +33,7 @@ function reducer(state: Vehicle[], action: Action): Vehicle[] {
 export function VansProvider({ children }: { children: ReactNode }) {
   const [vehicles, dispatch] = useReducer(reducer, []);
   const [savedVanIds, setSavedVanIds] = useState<string[]>([]);
-  useEffect(() => { getVehicles().then((items) => items.forEach((vehicle) => dispatch({ type: "add", vehicle }))).catch(() => undefined); }, []);
+  useEffect(() => { getVehicles().then((items) => dispatch({ type: "hydrate", vehicles: items })).catch(() => undefined); }, []);
   const value = useMemo(() => ({
     vehicles,
     savedVanIds,

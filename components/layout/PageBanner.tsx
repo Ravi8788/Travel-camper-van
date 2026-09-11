@@ -16,35 +16,34 @@ export function PageBanner({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden bg-ink text-sand-50 py-16 sm:py-20 lg:py-24",
-        className
-      )}
-    >
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 50%, var(--color-forest-600) 0%, transparent 50%), radial-gradient(circle at 80% 20%, var(--color-accent-600) 0%, transparent 40%)",
-        }}
-        aria-hidden="true"
-      />
-      <Container className="relative">
-        {eyebrow && (
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-accent-400">
-            {eyebrow}
-          </p>
-        )}
-        <h1 className="font-display text-3xl font-bold sm:text-4xl lg:text-5xl text-balance max-w-3xl">
-          {title}
-        </h1>
-        {description && (
-          <p className="mt-4 text-lg text-sand-300 max-w-2xl leading-relaxed">
-            {description}
-          </p>
-        )}
-        {children && <div className="mt-8">{children}</div>}
+    <div className={cn("bg-sand-50 pt-2 sm:pt-3", className)}>
+      <Container>
+        <div className="relative overflow-hidden rounded-2xl bg-ink px-4 py-7 text-sand-50 sm:rounded-3xl sm:px-6 sm:py-10">
+          <div
+            className="absolute inset-0 opacity-25"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 20% 50%, var(--color-forest-600) 0%, transparent 50%), radial-gradient(circle at 80% 20%, var(--color-accent-600) 0%, transparent 40%)",
+            }}
+            aria-hidden="true"
+          />
+          <div className="relative">
+            {eyebrow && (
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-accent-400">
+                {eyebrow}
+              </p>
+            )}
+            <h1 className="font-display text-2xl font-bold sm:text-4xl text-balance max-w-3xl">
+              {title}
+            </h1>
+            {description && (
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-sand-300 sm:text-base">
+                {description}
+              </p>
+            )}
+            {children && <div className="mt-6">{children}</div>}
+          </div>
+        </div>
       </Container>
     </div>
   );

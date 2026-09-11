@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { HTMLAttributes } from "react";
 
 const variants = {
-  default: "bg-sand-200 text-ink",
+  default: "bg-sand-200/60 text-ink",
   accent: "bg-accent-100 text-accent-700",
   forest: "bg-forest-100 text-forest-700",
   success: "bg-forest-100 text-forest-700",
@@ -24,7 +24,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.08em]",
+        "inline-flex items-center rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em]",
         variants[variant],
         className
       )}

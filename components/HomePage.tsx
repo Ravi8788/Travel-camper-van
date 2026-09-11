@@ -1,84 +1,503 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowRight, BedDouble, Camera, ChefHat, Compass, Heart, MapPin, PlugZap, Search, Star, Users, Wind } from "lucide-react";
-import { Button, ButtonLink, Card, CardContent, Container, FormField, Input, Select, StatusBadge } from "@/components/ui";
-import { getDestinations, getOffers, getReviews, getSettings } from "@/lib/data";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { ArrowRight, BedDouble, ChefHat, Compass, Heart, PlugZap, Search, Star, ShieldCheck, Sparkles } from "lucide-react";
+import { ButtonLink, Card, CardContent, Container, Input, Select, StatusBadge } from "@/components/ui";
+import { getOffers, getReviews } from "@/lib/data";
 import { formatCurrency } from "@/lib/utils";
+import { createClient } from "@/utils/supabase/client";
 import { useVansStore } from "@/lib/store/VansStore";
 
 const ease = [0.22, 1, 0.36, 1] as const;
-const reveal = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { duration: 0.7, ease } } };
+const reveal = { hidden: { opacity: 0, y: 22 }, show: { opacity: 1, y: 0, transition: { duration: 0.65, ease } } };
 
 function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const reduced = useReducedMotion();
-  return <motion.div initial={reduced ? false : "hidden"} whileInView={reduced ? undefined : "show"} viewport={{ once: true, amount: 0.18 }} variants={reveal} transition={{ delay }} className={className}>{children}</motion.div>;
+  return <motion.div initial={reduced ? false : "hidden"} whileInView={reduced ? undefined : "show"} viewport={{ once: true, amount: 0.15 }} variants={reveal} transition={{ delay }} className={className}>{children}</motion.div>;
 }
 
 const features = [
-  { icon: BedDouble, title: "Sleep anywhere", text: "Wake up somewhere worth remembering." },
-  { icon: ChefHat, title: "Cook on the road", text: "Your kitchen comes along for the ride." },
-  { icon: PlugZap, title: "Stay connected", text: "Power, comfort, and a signal when you need it." },
-  { icon: Compass, title: "Travel your way", text: "No fixed route. No fixed itinerary. You choose the journey." },
-];
-
-const gallery = [
-  ["https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1000&q=85", "Camp slowly"],
-  ["https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1000&q=85", "Take the long way"],
-  ["https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1000&q=85", "Make a meal"],
-  ["https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=1000&q=85", "Stay outside"],
-  ["https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1000&q=85", "Bring your people"],
+  { icon: BedDouble, title: "Sleep Anywhere", text: "Luxury queen memory foam beds under the stars. Wake up on cliff edges, secret valleys, or private beaches." },
+  { icon: ChefHat, title: "Chef-Ready Kitchen", text: "Pull-out induction stoves, Dometic 12V fridge, aeropress coffee kit, and cookware ready to go." },
+  { icon: PlugZap, title: "100% Off-Grid Power", text: "Rooftop monocrystalline solar + lithium batteries. High-speed Starlink to work from anywhere." },
+  { icon: Compass, title: "Total Self-Drive Freedom", text: "Zero fixed routes. Zero hidden mileage caps. Complete comprehensive insurance & 24/7 roadside rescue." },
 ];
 
 export default function HomePage() {
+  const router = useRouter();
   const { vehicles, savedVanIds, toggleSavedVan } = useVansStore();
-  const featured = vehicles.filter((vehicle) => vehicle.featured).concat(vehicles.filter((vehicle) => !vehicle.featured)).slice(0, 3);
-  const destinations = getDestinations().slice(0, 4);
-  const reviews = getReviews().slice(0, 3);
-  const offers = getOffers().slice(0, 3);
-  const settings = getSettings();
+  const featured = useMemo(
+    () =>
+      vehicles
+        .filter((vehicle) => vehicle.featured)
+        .concat(vehicles.filter((vehicle) => !vehicle.featured))
+        .slice(0, 3),
+    [vehicles]
+  );
+  const reviews = useMemo(() => getReviews().slice(0, 3), []);
+  const offers = useMemo(() => getOffers().slice(0, 3), []);
   const reduced = useReducedMotion();
 
-  return <main className="overflow-hidden bg-sand-50">
-    <section className="relative flex min-h-[calc(100svh-5rem)] items-end overflow-hidden bg-ink text-sand-50">
-      <motion.div initial={reduced ? false : { scale: 1.06 }} animate={reduced ? undefined : { scale: 1 }} transition={{ duration: 1.6, ease }} className="absolute inset-0"><Image src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=1600&q=82" alt="Camper van on a mountain road at golden hour" fill priority className="object-cover" sizes="100vw" /></motion.div>
-      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/45 to-ink/10" />
-      <Container className="relative z-10 w-full pb-10 pt-32 sm:pb-16 lg:pb-24">
-        <motion.div initial={reduced ? false : { opacity: 0, y: 30 }} animate={reduced ? undefined : { opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25, ease }} className="max-w-4xl">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-accent-300">Travel On Wheels</p>
-          <h1 className="mt-5 max-w-4xl font-display text-5xl font-bold uppercase leading-[0.86] tracking-[-0.055em] text-sand-50 sm:text-7xl lg:text-[7.4rem]">Your home.<br />Your road.<br /><span className="text-accent-400">Your adventure.</span></h1>
-          <p className="mt-7 max-w-lg text-base leading-relaxed text-sand-200 sm:text-lg">Premium camper vans built for unforgettable self-drive journeys.</p>
-          <div className="mt-8 flex flex-wrap gap-3"><ButtonLink href="/vans" size="lg">Explore vans <ArrowRight className="h-4 w-4" /></ButtonLink><ButtonLink href="/how-it-works" variant="outline" size="lg" className="border-sand-300/70 text-sand-50 hover:border-accent-400 hover:text-accent-300">How it works</ButtonLink></div>
+  const handleBookClick = async () => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      router.push("/login?next=%2Fbook");
+      return;
+    }
+    router.push("/book");
+  };
+
+  return (
+    <main className="overflow-hidden bg-sand-50 text-ink">
+      {/* ───── HERO SECTION ───── */}
+      <section className="bg-sand-50">
+        <Container className="py-2 sm:py-3">
+          <div className="relative flex min-h-[68vh] flex-col justify-center overflow-hidden rounded-2xl bg-ink px-4 py-9 text-sand-50 sm:min-h-[72vh] sm:rounded-3xl sm:px-6 sm:py-12">
+        <motion.div
+          initial={reduced ? false : { scale: 1.06 }}
+          animate={reduced ? undefined : { scale: 1 }}
+          transition={{ duration: 2.2, ease }}
+          className="absolute inset-0"
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=1600&q=82"
+            alt="Camper van under starry golden sunset sky"
+            fill
+            priority
+            quality={72}
+            className="object-cover"
+            sizes="100vw"
+          />
         </motion.div>
-        <div className="mt-14 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-sand-300"><ArrowDown className="h-4 w-4 animate-bounce text-accent-400" /> Scroll to explore</div>
-      </Container>
-      <BookingSearchBar />
-    </section>
+        
+        {/* Ambient Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/65 to-ink/35" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(217,93,57,0.20),transparent_60%)]" />
 
-    <div className="overflow-hidden border-b border-sand-200 bg-accent-500 py-4 text-ink"><motion.div animate={reduced ? undefined : { x: [0, -700] }} transition={{ duration: 22, repeat: Infinity, ease: "linear" }} className="flex w-max gap-8 whitespace-nowrap font-display text-sm font-bold uppercase tracking-[0.2em]">{Array.from({ length: 4 }).map((_, index) => <span key={index}>Road trips <span className="px-4">•</span> Camping <span className="px-4">•</span> Freedom <span className="px-4">•</span> Adventure <span className="px-4">•</span> Home on wheels <span className="px-4">•</span></span>)}</motion.div></div>
+        <div className="relative z-10 w-full">
+          <div className="mx-auto max-w-3xl text-center">
+            {/* Top Pill Badge */}
+            <motion.div
+              initial={reduced ? false : { opacity: 0, y: 16 }}
+              animate={reduced ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease }}
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-1.5 text-xs font-semibold text-sand-200 backdrop-blur-md shadow-sm"
+            >
+              <span className="flex h-2 w-2 rounded-full bg-accent-400 animate-pulse" />
+              <span>India&apos;s #1 Curated Vanlife Collective • 100% Pet Friendly</span>
+            </motion.div>
 
-    <section className="section-padding"><Container><Reveal><div className="max-w-2xl"><p className="eyebrow">Why Travel On Wheels?</p><h2 className="title-type mt-3 font-display font-bold">Not just a ride.<br /><span className="text-forest-600">It&apos;s your home on wheels.</span></h2><p className="mt-5 text-lg text-sand-500">Skip the ordinary. Take your stay with you.</p></div></Reveal><div className="mt-14 grid gap-px overflow-hidden rounded-xl bg-sand-200 sm:grid-cols-2 lg:grid-cols-4">{features.map(({ icon: Icon, title, text }, index) => <Reveal key={title} delay={index * 0.06}><article className="group h-full bg-sand-50 p-7 transition-colors hover:bg-sand-100"><Icon className="h-7 w-7 text-accent-600 transition-transform duration-300 group-hover:-translate-y-1" /><h3 className="mt-16 font-display text-xl font-bold">{title}</h3><p className="mt-3 text-sm leading-relaxed text-sand-500">{text}</p></article></Reveal>)}</div></Container></section>
+            {/* Responsive Headline */}
+            <motion.h1
+              initial={reduced ? false : { opacity: 0, y: 22 }}
+              animate={reduced ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease }}
+              className="mt-4 font-display text-[1.85rem] font-bold uppercase tracking-tight text-white sm:text-5xl lg:text-[3.15rem] leading-[1.08]"
+            >
+              Ditch the hotel.<br />
+              Live the road.<br />
+              <span className="bg-gradient-to-r from-accent-300 via-accent-400 to-amber-300 bg-clip-text text-transparent">
+                Your home on wheels.
+              </span>
+            </motion.h1>
 
-    <section className="section-padding bg-forest-700 text-sand-50"><Container><Reveal><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="eyebrow text-accent-300">Featured camper vans</p><h2 className="title-type mt-3 font-display font-bold text-sand-50">Meet your ride.</h2></div><p className="max-w-sm text-sand-200">Choose the home that fits your adventure.</p></div></Reveal><div className="mt-12 grid gap-6 lg:grid-cols-3">{featured.map((vehicle, index) => { const saved = savedVanIds.includes(vehicle.id); return <Reveal key={vehicle.id} delay={index * 0.08}><article className="group overflow-hidden rounded-xl bg-sand-50 text-ink"><div className="relative aspect-[4/3] overflow-hidden"><Image src={vehicle.images[0]} alt={vehicle.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width: 1024px) 33vw, 100vw" /><StatusBadge status={vehicle.status} /><button type="button" onClick={() => toggleSavedVan(vehicle.id)} aria-label={saved ? `Remove ${vehicle.name} from saved vans` : `Save ${vehicle.name}`} className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-sand-50/95"><Heart className={`h-5 w-5 ${saved ? "fill-accent-500 text-accent-500" : "text-forest-700"}`} /></button></div><div className="p-6"><div className="flex items-start justify-between gap-3"><h3 className="font-display text-2xl font-bold">{vehicle.name}</h3><p className="text-right font-display font-bold">{formatCurrency(vehicle.pricePerDay)}<span className="block text-xs font-normal text-sand-500">/ day</span></p></div><p className="mt-3 text-sm text-sand-500">{vehicle.shortDescription}</p><div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold text-sand-500"><span className="rounded-md bg-sand-100 px-2 py-1">{vehicle.passengerCapacity} seats</span><span className="rounded-md bg-sand-100 px-2 py-1">{vehicle.sleepingCapacity} beds</span><span className="rounded-md bg-sand-100 px-2 py-1 capitalize">{vehicle.transmission}</span></div><ButtonLink href={`/vans/${vehicle.slug}`} variant="link" className="mt-5">View details <ArrowRight className="h-4 w-4" /></ButtonLink></div></article></Reveal>; })}</div><div className="mt-10 text-center"><ButtonLink href="/vans" variant="outline" className="border-forest-300 text-sand-50 hover:border-accent-300 hover:text-accent-300">View all vans <ArrowRight className="h-4 w-4" /></ButtonLink></div></Container></section>
+            {/* Subhead */}
+            <motion.p
+              initial={reduced ? false : { opacity: 0, y: 16 }}
+              animate={reduced ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease }}
+              className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-sand-200 sm:text-base lg:text-lg"
+            >
+              Bespoke self-drive rigs with 100% off-grid solar, cozy queen beds, and Starlink WiFi. Freedom to wake up anywhere.
+            </motion.p>
 
-    <section className="relative flex min-h-[60vh] items-center overflow-hidden bg-ink text-sand-50"><Image src="https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1200&q=82" alt="Open landscape at sunrise" fill className="object-cover opacity-55" sizes="100vw" /><div className="absolute inset-0 bg-ink/45" /><Container className="relative py-28"><Reveal><p className="eyebrow text-accent-300">The freedom is yours</p><h2 className="mt-4 max-w-3xl font-display text-5xl font-bold uppercase leading-[0.9] text-sand-50 sm:text-7xl">Where will you<br /><span className="text-accent-400">wake up?</span></h2><p className="mt-6 max-w-md text-lg text-sand-200">Mountains. Beaches. Forests. Highways. You choose the destination. We provide the home.</p></Reveal></Container></section>
+            {/* Gen-Z Vibe Check Filter Chips */}
+            <motion.div
+              initial={reduced ? false : { opacity: 0 }}
+              animate={reduced ? undefined : { opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="mt-4 flex flex-wrap justify-center gap-2 text-xs font-medium text-sand-300"
+            >
+              <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 backdrop-blur-sm">⚡ 100% Solar Off-Grid</span>
+              <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 backdrop-blur-sm">🐾 Paws Welcome</span>
+              <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 backdrop-blur-sm">📶 Starlink Nomads</span>
+              <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 backdrop-blur-sm">☕ Pour-Over Kit</span>
+              <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 backdrop-blur-sm">🏔️ Mountain & Surf</span>
+            </motion.div>
+          </div>
 
-    <section className="section-padding"><Container><Reveal><div className="max-w-2xl"><p className="eyebrow">From booking to road trip</p><h2 className="title-type mt-3 font-display font-bold">Four steps.<br />Infinite detours.</h2></div></Reveal><div className="mt-14 grid gap-8 md:grid-cols-4">{[["01", "Choose your van", "Find the layout and comfort level for your crew."], ["02", "Pick your dates", "Give yourself four days of runway."], ["03", "Pick up & go", "Choose pickup and return locations, then take the keys."], ["04", "Return & repeat", "Bring the van back, keep the memories." ]].map(([number, title, text], index) => <Reveal key={number} delay={index * 0.08}><div className="border-t-2 border-forest-600 pt-5"><span className="font-display text-5xl font-bold text-accent-500">{number}</span><h3 className="mt-10 font-display text-xl font-bold">{title}</h3><p className="mt-3 text-sm leading-relaxed text-sand-500">{text}</p></div></Reveal>)}</div></Container></section>
+          {/* Integrated Floating Booking Search Bar */}
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 20 }}
+            animate={reduced ? undefined : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45, ease }}
+            className="mx-auto mt-7 w-full max-w-4xl"
+          >
+            <BookingSearchBar />
+          </motion.div>
 
-    <section className="section-padding bg-sand-100"><Container><Reveal><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="eyebrow">Optional inspiration</p><h2 className="title-type mt-3 font-display font-bold">Need some inspiration?</h2><p className="mt-4 text-sand-500">Your journey. Your destination. Your way.</p></div><ButtonLink href="/destinations" variant="link">Explore destinations <ArrowRight className="h-4 w-4" /></ButtonLink></div></Reveal><div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{destinations.map((destination, index) => <Reveal key={destination.id} delay={index * 0.06}><Link href={`/destinations/${destination.slug}`} className="group block"><div className="relative aspect-[4/5] overflow-hidden rounded-xl"><Image src={destination.image} alt={destination.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width: 1024px) 25vw, 100vw" /><div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" /><div className="absolute inset-x-0 bottom-0 p-5 text-sand-50"><p className="text-xs font-bold uppercase tracking-wider text-accent-300">{destination.recommendedDuration}</p><h3 className="mt-2 font-display text-xl font-bold">{destination.name}</h3><p className="mt-2 text-sm text-sand-200">{destination.shortDescription}</p></div></div></Link></Reveal>)}</div></Container></section>
+          {/* Quick Hero Trust Indicators */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-sand-300 sm:gap-8">
+            <span className="flex items-center gap-1.5 font-medium"><Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" /> 4.9★ Average Rating (180+ Trips)</span>
+            <span className="flex items-center gap-1.5 font-medium"><ShieldCheck className="h-3.5 w-3.5 text-forest-300" /> Zero Hidden Charges</span>
+            <span className="flex items-center gap-1.5 font-medium"><Sparkles className="h-3.5 w-3.5 text-accent-300" /> Instant Digital Driver Verification</span>
+          </div>
+        </div>
+          </div>
+        </Container>
+      </section>
 
-    <section className="section-padding bg-ink text-sand-50"><Container><Reveal><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="eyebrow text-accent-300">The road crew says it best</p><h2 className="title-type mt-3 font-display font-bold text-sand-50">Good trips.<br />Great company.</h2></div><div className="flex items-center gap-2 text-accent-300"><Star className="h-5 w-5 fill-current" /><strong className="font-display text-xl">4.9/5</strong></div></div></Reveal><div className="mt-12 flex snap-x gap-5 overflow-x-auto pb-4">{reviews.map((review) => <blockquote key={review.id} className="min-w-[min(88vw,420px)] snap-start rounded-xl border border-ink-muted bg-ink-soft p-7"><div className="flex gap-1 text-accent-400">{Array.from({ length: review.rating }).map((_, index) => <Star key={index} className="h-4 w-4 fill-current" />)}</div><p className="mt-6 font-display text-xl leading-snug text-sand-100">&ldquo;{review.text}&rdquo;</p><footer className="mt-7 flex justify-between border-t border-ink-muted pt-4 text-sm"><strong className="text-sand-200">{review.customerName}</strong><span className="text-sand-500">{review.destination}</span></footer></blockquote>)}</div></Container></section>
+      {/* ───── TICKER ───── */}
+      <div className="overflow-hidden border-b border-sand-200 bg-accent-600 py-2.5 text-white">
+        <div className="ticker-track flex w-max gap-8 whitespace-nowrap font-display text-xs font-bold uppercase tracking-[0.2em] sm:text-sm">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <span key={index} className="flex items-center gap-8">
+              Road trips <span className="text-accent-300">✦</span> 100% Solar Off-grid <span className="text-accent-300">✦</span> Freedom <span className="text-accent-300">✦</span> Adventure <span className="text-accent-300">✦</span> Home on wheels <span className="text-accent-300">✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
 
-    <section className="section-padding"><Container><Reveal><div className="flex items-end justify-between"><div><p className="eyebrow">Life looks better on the road</p><h2 className="title-type mt-3 font-display font-bold">Bring the feeling home.</h2></div><Camera className="hidden h-8 w-8 text-accent-600 sm:block" /></div></Reveal><div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">{gallery.map(([src, label], index) => <Reveal key={`${src}-${index}`} delay={index * 0.05} className={index === 1 ? "sm:row-span-2" : ""}><div className={`group relative overflow-hidden rounded-lg ${index === 1 ? "aspect-[3/4]" : "aspect-square"}`}><Image src={src} alt={label} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(min-width: 640px) 25vw, 50vw" /><div className="absolute inset-0 bg-ink/0 transition-colors group-hover:bg-ink/30" /><span className="absolute bottom-3 left-3 text-xs font-bold uppercase tracking-wider text-white opacity-0 transition-opacity group-hover:opacity-100">{label}</span></div></Reveal>)}</div></Container></section>
+      {/* ───── WHY TRAVEL ON WHEELS (FEATURES) ───── */}
+      <section className="section-padding bg-sand-50">
+        <Container>
+          <Reveal>
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="eyebrow text-accent-600">Why Travel On Wheels?</p>
+              <h2 className="title-type mt-2 font-display font-bold">
+                Not just a ride.<br />
+                <span className="gradient-text">It&apos;s your boutique stay on wheels.</span>
+              </h2>
+              <p className="mt-2.5 text-sm text-sand-500 sm:text-base">
+                Skip rigid hotel check-ins and crowded tour buses. Take your home with you.
+              </p>
+            </div>
+          </Reveal>
 
-    <section className="section-padding bg-sand-100"><Container><Reveal><div className="flex items-end justify-between"><div><p className="eyebrow">Your next escape just got better</p><h2 className="title-type mt-3 font-display font-bold">More road for your rupee.</h2></div><ButtonLink href="/offers" variant="link">View all offers <ArrowRight className="h-4 w-4" /></ButtonLink></div></Reveal><div className="mt-10 grid gap-5 md:grid-cols-3">{offers.map((offer) => <Card key={offer.id} className="overflow-hidden"><div className="bg-accent-500 p-6 text-white"><span className="font-display text-5xl font-bold">{offer.discountPercent}%</span><span className="ml-2 text-xs font-bold uppercase tracking-widest">off</span></div><CardContent className="p-6"><h3 className="font-display text-xl font-bold">{offer.name}</h3><p className="mt-3 text-sm leading-relaxed text-sand-500">{offer.description}</p><ButtonLink href="/book" variant="link" className="mt-5">Book now <ArrowRight className="h-4 w-4" /></ButtonLink></CardContent></Card>)}</div></Container></section>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
+            {features.map(({ icon: Icon, title, text }, index) => (
+              <Reveal key={title} delay={index * 0.05}>
+                <article className="group relative h-full rounded-2xl border border-sand-200 bg-white p-5 sm:p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-accent-400/40 hover:shadow-card">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-50 text-accent-600 transition-transform duration-300 group-hover:scale-110">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="mt-4 font-display text-lg font-bold text-ink sm:text-xl">{title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-sand-500 sm:text-sm">{text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </section>
 
-    <section className="relative overflow-hidden bg-forest-700 py-28 text-sand-50 sm:py-40"><Image src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=1200&q=82" alt="Camper van under a night sky" fill className="object-cover opacity-30" sizes="100vw" /><Container className="relative"><Reveal><p className="eyebrow text-accent-300">Your next chapter</p><h2 className="mt-4 max-w-3xl font-display text-6xl font-bold uppercase leading-[0.88] text-sand-50 sm:text-8xl">Ready to<br /><span className="text-accent-400">get lost?</span></h2><p className="mt-7 text-lg text-forest-100">Your next adventure is waiting.</p><div className="mt-8 flex flex-wrap gap-3"><ButtonLink href="/vans" size="lg">Explore camper vans <ArrowRight className="h-4 w-4" /></ButtonLink><ButtonLink href="/book" variant="outline" size="lg" className="border-forest-300 text-sand-50 hover:border-accent-300">Start your journey</ButtonLink></div></Reveal></Container></section>
-  </main>;
+      {/* ───── FEATURED VANS (Warm Oat Canvas) ───── */}
+      <section className="section-padding border-y border-sand-200 bg-sand-100/70">
+        <Container>
+          <Reveal>
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="eyebrow text-accent-600">Handcrafted Camper Fleet</p>
+                <h2 className="title-type mt-1 font-display font-bold text-ink">Meet your rig.</h2>
+                <p className="mt-1 text-sm text-sand-500 sm:text-base">Custom-built for untamed mountain roads and golden coastlines.</p>
+              </div>
+              <ButtonLink href="/vans" variant="outline" size="sm" className="self-start border-sand-300 bg-white hover:border-accent-500 hover:text-accent-600 sm:self-auto">
+                View all 18 vans <ArrowRight className="h-4 w-4" />
+              </ButtonLink>
+            </div>
+          </Reveal>
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featured.map((vehicle, index) => {
+              const saved = savedVanIds.includes(vehicle.id);
+              const perPerson = Math.round(vehicle.pricePerDay / (vehicle.sleepingCapacity || 2));
+              return (
+                <Reveal key={vehicle.id} delay={index * 0.06}>
+                  <article className="group overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card">
+                    {/* Van Image Container */}
+                    <div className="relative aspect-[16/10] overflow-hidden bg-sand-200">
+                      <Image
+                        src={vehicle.images[0]}
+                        alt={vehicle.name}
+                        fill
+                        quality={72}
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(min-width: 1024px) 33vw, 100vw"
+                      />
+                      <div className="absolute left-3 top-3">
+                        <StatusBadge status={vehicle.status} />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleSavedVan(vehicle.id)}
+                        aria-label={saved ? `Remove ${vehicle.name} from saved` : `Save ${vehicle.name}`}
+                        className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-md transition-transform hover:scale-110"
+                      >
+                        <Heart className={`h-4 w-4 ${saved ? "fill-accent-500 text-accent-500" : "text-slate-600"}`} />
+                      </button>
+                    </div>
+
+                    {/* Card Content */}
+                    <div className="p-5 sm:p-6">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="font-display text-xl font-bold text-ink">{vehicle.name}</h3>
+                          <div className="mt-1 flex items-center gap-1.5 text-xs text-sand-500">
+                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                            <span className="font-semibold text-ink">4.9</span>
+                            <span>• Verified Superhost</span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-display text-xl font-bold text-accent-600">
+                            {formatCurrency(vehicle.pricePerDay)}
+                            <span className="text-xs font-normal text-sand-500"> /day</span>
+                          </p>
+                          <span className="mt-1 inline-block rounded-full bg-accent-50 px-2.5 py-0.5 text-xs font-bold text-accent-700">
+                            Split: {formatCurrency(perPerson)}/person
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="mt-3 text-xs sm:text-sm text-sand-500 line-clamp-2 leading-relaxed">
+                        {vehicle.shortDescription}
+                      </p>
+
+                      {/* Specs Chips */}
+                      <div className="mt-4 flex flex-wrap gap-1.5 text-xs font-medium text-slate-600">
+                        <span className="rounded-lg bg-sand-100 px-3 py-1">👥 {vehicle.passengerCapacity} seats</span>
+                        <span className="rounded-lg bg-sand-100 px-3 py-1">🛏️ {vehicle.sleepingCapacity} berths</span>
+                        <span className="rounded-lg bg-sand-100 px-3 py-1 capitalize">⚙️ {vehicle.transmission}</span>
+                        <span className="rounded-lg bg-forest-50 text-forest-700 px-3 py-1">⚡ Solar 400W</span>
+                      </div>
+
+                      {/* CTA */}
+                      <ButtonLink href={`/vans/${vehicle.slug}`} className="mt-5 w-full justify-center" size="sm">
+                        View details & reserve <ArrowRight className="h-4 w-4" />
+                      </ButtonLink>
+                    </div>
+                  </article>
+                </Reveal>
+              );
+            })}
+          </div>
+        </Container>
+      </section>
+
+      {/* ───── HOW IT WORKS (4 STEPS) ───── */}
+      <section className="section-padding border-t border-sand-200 bg-sand-100/60">
+        <Container>
+          <Reveal>
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="eyebrow text-accent-600">Effortless Journey</p>
+              <h2 className="title-type mt-2 font-display font-bold">Four Steps. Infinite Detours.</h2>
+              <p className="mt-2 text-sm text-sand-500 sm:text-base">Booking your self-drive camper takes under 3 minutes.</p>
+            </div>
+          </Reveal>
+
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              ["01", "Choose Your Rig", "Pick 2-berth, 4-berth, or heavy-duty 4x4 overland titan."],
+              ["02", "Select Travel Window", "Lock your departure & return dates with zero hidden caps."],
+              ["03", "Digital ID Clearance", "Upload your driver's license with 2-minute paperless verification."],
+              ["04", "Pick Up & Drive Off", "Complete 15-min rig masterclass at the depot, take keys, and go."],
+            ].map(([number, title, text], index) => (
+              <Reveal key={number} delay={index * 0.06}>
+                <div className="rounded-2xl border border-sand-200 bg-white p-5 shadow-soft transition-colors hover:border-accent-400/50 sm:p-6">
+                  <span className="font-display text-3xl font-bold text-accent-500/70 sm:text-4xl">{number}</span>
+                  <h3 className="mt-3 font-display text-base font-bold text-ink sm:text-lg">{title}</h3>
+                  <p className="mt-1.5 text-xs text-sand-500 leading-relaxed sm:text-sm">{text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ───── VERIFIED ROAD TRIP TESTIMONIALS ───── */}
+      <section className="section-padding bg-ink text-sand-50">
+        <Container>
+          <Reveal>
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="eyebrow text-accent-300">Community Vibe Check</p>
+                <h2 className="title-type mt-1 font-display font-bold text-white">The Road Crew Says It Best</h2>
+              </div>
+              <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs text-sand-200">
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <span className="font-bold text-white">4.9 / 5</span>
+                <span>from 180+ nomads</span>
+              </div>
+            </div>
+          </Reveal>
+
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {reviews.map((review, index) => (
+              <Reveal key={review.id} delay={index * 0.06}>
+                <blockquote className="flex h-full flex-col justify-between rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6 backdrop-blur-sm">
+                  <div>
+                    <div className="flex gap-1 text-accent-400">
+                      {Array.from({ length: review.rating }).map((_, i) => (
+                        <Star key={i} className="h-3.5 w-3.5 fill-current" />
+                      ))}
+                    </div>
+                    <p className="mt-4 text-sm text-sand-100 leading-relaxed sm:text-base">&ldquo;{review.text}&rdquo;</p>
+                  </div>
+                  <footer className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-xs">
+                    <strong className="text-white">{review.customerName}</strong>
+                    <span className="text-sand-400">{review.destination}</span>
+                  </footer>
+                </blockquote>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ───── PROMO OFFERS ───── */}
+      <section className="section-padding bg-sand-50">
+        <Container>
+          <Reveal>
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+              <div>
+                <p className="eyebrow text-accent-600">Nomad Perks</p>
+                <h2 className="title-type mt-1 font-display font-bold">More Road for Your Rupee</h2>
+              </div>
+              <ButtonLink href="/offers" variant="link" className="self-start sm:self-auto">
+                View all offers <ArrowRight className="h-4 w-4" />
+              </ButtonLink>
+            </div>
+          </Reveal>
+
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {offers.map((offer, index) => (
+              <Reveal key={offer.id} delay={index * 0.06}>
+                <Card className="overflow-hidden border border-sand-200 transition-all hover:shadow-card">
+                  <div className="bg-gradient-to-r from-accent-500 to-accent-600 px-5 py-3.5 text-white flex items-center justify-between">
+                    <div>
+                      <span className="font-display text-3xl font-bold">{offer.discountPercent}%</span>
+                      <span className="ml-1 text-xs uppercase tracking-wider font-semibold">OFF</span>
+                    </div>
+                    <span className="text-xs bg-white/20 px-2.5 py-1 rounded-full font-medium">Promo code ready</span>
+                  </div>
+                  <CardContent className="p-5">
+                    <h3 className="font-display text-base font-bold text-ink sm:text-lg">{offer.name}</h3>
+                    <p className="mt-2 text-xs sm:text-sm text-sand-500 leading-relaxed">{offer.description}</p>
+                    <button
+                      type="button"
+                      onClick={() => void handleBookClick()}
+                      className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-forest-700 underline-offset-4 hover:underline sm:text-sm"
+                    >
+                      Claim & book now <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  </CardContent>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ───── FINAL CTA ───── */}
+      <section className="relative overflow-hidden bg-ink py-16 text-sand-50 sm:py-24">
+        <Image
+          src="https://images.unsplash.com/photo-1500534623283-312aade485b7?w=1200&q=82"
+          alt="Camper parked overlooking sunrise valley"
+          fill
+          className="object-cover opacity-30"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-transparent" />
+        <Container className="relative z-10 text-center">
+          <Reveal>
+            <p className="eyebrow text-accent-300">Ready to break the routine?</p>
+            <h2 className="mt-3 font-display text-3xl font-bold uppercase text-white sm:text-4xl lg:text-5xl">
+              Where will you<br />
+              <span className="text-accent-400">wake up tomorrow?</span>
+            </h2>
+            <p className="mx-auto mt-3.5 max-w-md text-sm text-sand-200 sm:text-base">
+              Mountains. Secret coastlines. Golden desert dunes. The keys are waiting.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <ButtonLink href="/vans" size="md">
+                Explore camper vans <ArrowRight className="h-4 w-4" />
+              </ButtonLink>
+              <button
+                type="button"
+                onClick={() => void handleBookClick()}
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-6 text-sm font-semibold text-white transition-all hover:border-accent-400 hover:bg-accent-400/10"
+              >
+                Check availability
+              </button>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+    </main>
+  );
 }
 
 function BookingSearchBar() {
-  return <div className="booking-search-bar relative z-20 mt-8 w-[calc(100%-2rem)] max-w-[58rem] rounded-[1.5rem] border border-white/20 bg-[#0d0d0c]/90 p-5 shadow-elevated backdrop-blur-md sm:mt-12 sm:p-6"><div className="mb-5 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-accent-300"><Search className="h-4 w-4 shrink-0" /> <span>Plan your own journey</span></div><div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[1.05fr_1.2fr_1.2fr_0.7fr_auto]"><FormField label="Pick-up location"><Select className="booking-control min-w-0 border-sand-300 bg-sand-50" options={[{ value: "pune", label: "Pune" }, { value: "mumbai", label: "Mumbai" }, { value: "goa", label: "Goa" }]} /></FormField><FormField label="Pick-up date"><Input className="booking-control min-w-0 border-sand-300 bg-sand-50" type="date" /></FormField><FormField label="Return date"><Input className="booking-control min-w-0 border-sand-300 bg-sand-50" type="date" /></FormField><FormField label="Travellers"><Input className="booking-control min-w-0 border-sand-300 bg-sand-50" type="number" min="1" defaultValue="2" /></FormField><Button className="booking-action w-full min-w-0 self-end sm:col-span-2 lg:col-span-1">Check availability <ArrowRight className="h-4 w-4 shrink-0" /></Button></div></div>;
+  return (
+    <div className="rounded-2xl border border-white/50 bg-white/95 p-4 shadow-2xl backdrop-blur-xl text-ink sm:p-5">
+      <div className="mb-3 flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent-700">
+          <Search className="h-3.5 w-3.5 text-accent-600" /> Instant Fleet Search
+        </span>
+        <span className="text-xs text-slate-500 hidden sm:inline">Self-drive • All-inclusive insurance</span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-[1.1fr_1fr_1fr_0.7fr_auto] lg:items-end">
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-slate-600">Pick-up hub</label>
+          <Select
+            className="h-11 w-full rounded-xl border border-sand-300 bg-sand-50/70 text-xs sm:text-sm font-medium focus:border-accent-500"
+            options={[
+              { value: "pune", label: "Pune Depot" },
+              { value: "mumbai", label: "Mumbai Hub" },
+              { value: "goa", label: "Goa Airport Depot" },
+              { value: "manali", label: "Manali High-Pass Depot" },
+            ]}
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-slate-600">Departure date</label>
+          <Input
+            className="h-11 w-full rounded-xl border border-sand-300 bg-sand-50/70 text-xs sm:text-sm font-medium focus:border-accent-500"
+            type="date"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-slate-600">Return date</label>
+          <Input
+            className="h-11 w-full rounded-xl border border-sand-300 bg-sand-50/70 text-xs sm:text-sm font-medium focus:border-accent-500"
+            type="date"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-slate-600">Guests</label>
+          <Input
+            className="h-11 w-full rounded-xl border border-sand-300 bg-sand-50/70 text-xs sm:text-sm font-medium focus:border-accent-500"
+            type="number"
+            min="1"
+            max="6"
+            defaultValue="2"
+          />
+        </div>
+
+        <ButtonLink
+          href="/vans"
+          className="h-11 w-full items-center justify-center rounded-xl bg-accent-500 px-5 text-xs font-semibold text-white shadow-sm hover:bg-accent-600 sm:text-sm sm:col-span-2 lg:col-span-1"
+        >
+          Find Vans <ArrowRight className="ml-1.5 h-4 w-4" />
+        </ButtonLink>
+      </div>
+    </div>
+  );
 }

@@ -25,7 +25,7 @@ export function Section({
     <section
       id={id}
       className={cn(
-        "section-padding",
+        "section-padding relative overflow-hidden",
         dark ? "bg-ink text-sand-100" : "",
         className
       )}
@@ -54,7 +54,7 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        "mb-12 max-w-2xl",
+        "mb-8 max-w-2xl sm:mb-10",
         align === "center" && "mx-auto text-center",
         className
       )}
@@ -62,7 +62,7 @@ export function SectionHeader({
       {eyebrow && (
         <p
           className={cn(
-            "mb-3 text-sm font-semibold uppercase tracking-widest",
+            "eyebrow mb-4",
             dark ? "text-accent-400" : "text-accent-600"
           )}
         >
@@ -71,7 +71,7 @@ export function SectionHeader({
       )}
       <h2
         className={cn(
-          "font-display text-3xl font-bold sm:text-4xl lg:text-5xl text-balance",
+          "font-display text-2xl font-bold sm:text-3xl lg:text-[2rem] text-balance tracking-tight",
           dark ? "text-sand-50" : "text-ink"
         )}
       >
@@ -80,7 +80,7 @@ export function SectionHeader({
       {description && (
         <p
           className={cn(
-            "mt-4 text-lg leading-relaxed",
+            "mt-5 text-lg leading-relaxed",
             dark ? "text-sand-300" : "text-sand-500"
           )}
         >
@@ -92,5 +92,5 @@ export function SectionHeader({
 }
 
 export function Divider({ className }: { className?: string }) {
-  return <hr className={cn("border-sand-200", className)} />;
+  return <hr className={cn("border-sand-200/60", className)} />;
 }

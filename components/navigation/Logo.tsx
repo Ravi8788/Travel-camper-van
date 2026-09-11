@@ -5,9 +5,11 @@ import { SITE_NAME } from "@/lib/constants";
 export function Logo({
   className,
   variant = "default",
+  alwaysShowName = false,
 }: {
   className?: string;
   variant?: "default" | "light";
+  alwaysShowName?: boolean;
 }) {
   return (
     <Link
@@ -25,7 +27,7 @@ export function Logo({
       >
         TOW
       </span>
-      <span className="hidden sm:block">
+      <span className={alwaysShowName ? "block" : "hidden sm:block"}>
         <span
           className={cn(
             "block font-display text-base font-bold leading-tight",

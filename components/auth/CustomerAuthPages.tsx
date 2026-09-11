@@ -8,6 +8,9 @@ import { Button, ButtonLink, Card, CardContent, Container, FormField, Input } fr
 import { PageContent } from "@/components/layout/PageBanner";
 import { createClient } from "@/utils/supabase/client";
 
+const DEMO_CUSTOMER_EMAIL = "customer@gmail.com";
+const DEMO_CUSTOMER_PASSWORD = "Customer@123";
+
 type AuthShellProps = {
   eyebrow: string;
   title: string;
@@ -20,10 +23,15 @@ function AuthShell({ eyebrow, title, subtitle, children, variant }: AuthShellPro
   const isAdmin = variant === "admin";
 
   return (
-    <PageContent className={`${isAdmin ? "auth-admin-page" : "auth-customer-page"} min-h-[calc(100vh-5rem)] px-0 py-5 sm:py-10`}>
-      <Container>
-        <Card className={`auth-shell mx-auto grid max-w-5xl overflow-hidden border-0 shadow-elevated lg:grid-cols-[0.9fr_1.1fr] ${isAdmin ? "bg-slate-950" : "bg-sand-50"}`}>
-          <div className="auth-visual relative hidden min-h-[620px] overflow-hidden p-8 text-white lg:flex lg:flex-col lg:justify-between sm:p-10">
+    <PageContent className={`${isAdmin ? "auth-admin-page" : "auth-customer-page"} h-screen overflow-hidden px-0 py-3 sm:py-5`}>
+      <Container className="h-full">
+        <div className="mb-3 flex justify-end">
+          <ButtonLink href="/" variant="outline" size="sm" className="h-9 px-3 text-xs font-semibold">
+            View site
+          </ButtonLink>
+        </div>
+        <Card className={`auth-shell mx-auto grid h-[calc(100vh-7rem)] max-w-5xl overflow-hidden border-0 shadow-elevated lg:grid-cols-[0.9fr_1.1fr] ${isAdmin ? "bg-slate-950" : "bg-sand-50"}`} padding="none">
+          <div className="auth-visual relative hidden h-full min-h-[560px] overflow-hidden p-8 text-white lg:flex lg:flex-col lg:justify-between sm:p-10">
             <div className="auth-grid absolute inset-0 opacity-30" />
             <div className="auth-orbit absolute -right-24 top-20 h-80 w-80 rounded-full border border-accent-300/40" />
             <div className="auth-orbit auth-orbit-delay absolute -bottom-32 -left-28 h-96 w-96 rounded-full border-[18px] border-white/10" />
@@ -33,14 +41,14 @@ function AuthShell({ eyebrow, title, subtitle, children, variant }: AuthShellPro
             </div>
             <div className="relative z-10 max-w-sm">
               <p className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-accent-300"><Sparkles className="h-4 w-4" /> {eyebrow}</p>
-              <p className="font-display text-6xl font-bold leading-[0.9] tracking-tight">Make room for the good kind of lost.</p>
+              <p className="font-display text-5xl font-bold leading-[0.92] tracking-tight xl:text-6xl">Make room for the good kind of lost.</p>
               <p className="mt-6 max-w-xs text-sm leading-relaxed text-white/65">{isAdmin ? "One calm place for the people, vehicles, and trips that keep the road moving." : "Your next Maharashtra escape starts with a van, a route, and a little more freedom."}</p>
             </div>
             <div className="relative z-10 flex items-center gap-3 text-xs text-white/60"><span className="h-2 w-2 rounded-full bg-accent-400" /> Mahabaleshwar · Panchgani · Tapola</div>
           </div>
-          <div className="bg-sand-50 p-5 sm:p-10 lg:p-14">
+          <div className="bg-sand-50 p-6 sm:p-10 lg:p-14">
             <div className="mb-8 lg:hidden"><p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-accent-600"><Compass className="h-4 w-4" /> Travel On Wheels</p></div>
-            <p className={`text-xs font-bold uppercase tracking-[0.2em] ${isAdmin ? "text-slate-500" : "text-accent-600"}`}>{isAdmin ? "Operations workspace" : eyebrow}</p>
+            <p className={`eyebrow ${isAdmin ? "text-slate-500" : ""}`}>{isAdmin ? "Operations workspace" : eyebrow}</p>
             <h1 className="mt-3 max-w-md font-display text-4xl font-bold leading-[0.95] tracking-tight sm:text-5xl">{title}</h1>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-sand-500">{subtitle}</p>
             <div className="mt-8">{children}</div>
@@ -78,6 +86,42 @@ export function CustomerLoginPage() {
     router.refresh();
   };
 
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    setError("");
+    const supabase = createClient();
+    const signInResult = await supabase.auth.signInWithPassword({ email: DEMO_CUSTOMER_EMAIL, password: DEMO_CUSTOMER_PASSWORD });
+    if (signInResult.error) {
+      const signUp = await supabase.auth.signUp({
+        email: DEMO_CUSTOMER_EMAIL,
+        password: DEMO_CUSTOMER_PASSWORD,
+        options: { data: { full_name: "Demo Customer", phone: "9999999999", role: "customer" } },
+      });
+      if (!signUp.error && signUp.data?.session) {
+        setLoading(false);
+        router.push(nextPath);
+        router.refresh();
+        return;
+      } else if (!signUp.error) {
+        setLoading(false);
+        setError("Demo account created. Disable email confirmation in Supabase or verify the demo email before signing in.");
+        return;
+      }
+      if (signUp.error.message.toLowerCase().includes("already")) {
+        setLoading(false);
+        setError("customer@gmail.com already exists in Supabase with a different password. Reset that account password or create this demo user in Supabase Auth with password Customer@123.");
+        return;
+      }
+    }
+    setLoading(false);
+    if (signInResult.error) {
+      setError(`Demo login failed: ${signInResult.error.message}`);
+      return;
+    }
+    router.push(nextPath);
+    router.refresh();
+  };
+
   return (
     <AuthShell
       eyebrow="Travel On Wheels"
@@ -107,7 +151,7 @@ export function CustomerLoginPage() {
         </FormField>
 
         {error && (
-          <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -126,6 +170,11 @@ export function CustomerLoginPage() {
           {loading ? "Signing in..." : "Log in"}
           <ArrowRight className="h-4 w-4" />
         </Button>
+
+        <Button type="button" variant="outline" className="w-full" onClick={() => void handleDemoLogin()} disabled={loading}>
+          Continue with demo customer
+        </Button>
+        <p className="text-center text-xs text-sand-500">Demo: {DEMO_CUSTOMER_EMAIL} / {DEMO_CUSTOMER_PASSWORD}</p>
       </form>
     </AuthShell>
   );

@@ -7,7 +7,6 @@ export const PUBLIC_NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/vans", label: "Our Vans" },
   { href: "/how-it-works", label: "How It Works" },
-  { href: "/destinations", label: "Destinations" },
   { href: "/packages", label: "Packages" },
   { href: "/offers", label: "Offers" },
   { href: "/reviews", label: "Reviews" },
@@ -24,7 +23,6 @@ export const ADMIN_NAV_LINKS = [
   { href: "/admin/customers", label: "Customers" },
   { href: "/admin/reviews", label: "Reviews" },
   { href: "/admin/offers", label: "Offers" },
-  { href: "/admin/destinations", label: "Destinations" },
   { href: "/admin/settings", label: "Settings" },
 ] as const;
 

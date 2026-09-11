@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Construction } from "lucide-react";
 import { ButtonLink, Card, CardContent } from "@/components/ui";
 import { PageBanner, PageContent } from "./PageBanner";
@@ -12,6 +13,17 @@ export function PlaceholderPage({
   description?: string;
   eyebrow?: string;
 }) {
+  const router = useRouter();
+  const handleBook = async () => {
+    const supabase = (await import("@/utils/supabase/client")).createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      router.push("/login?next=%2Fbook");
+      return;
+    }
+    router.push("/book");
+  };
+
   return (
     <>
       <PageBanner title={title} description={description} eyebrow={eyebrow} />
@@ -45,6 +57,20 @@ export function PlaceholderPage({
 }
 
 export function ShellPreviewHome() {
+  const router = useRouter();
+
+  const handleBookClick = async () => {
+    const supabase = (await import("@/utils/supabase/client")).createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      router.push("/login?next=%2Fbook");
+      return;
+    }
+
+    router.push("/book");
+  };
+
   return (
     <>
       <section className="relative min-h-[70vh] flex items-center overflow-hidden">
@@ -70,9 +96,13 @@ export function ShellPreviewHome() {
             No driver — just freedom, comfort, and adventure.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <ButtonLink href="/book" size="lg">
+            <button
+              type="button"
+              onClick={() => void handleBookClick()}
+              className="inline-flex items-center justify-center rounded-xl bg-accent-500 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-600"
+            >
               Book Your Van
-            </ButtonLink>
+            </button>
             <ButtonLink
               href="/vans"
               variant="outline"

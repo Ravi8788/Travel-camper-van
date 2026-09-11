@@ -51,8 +51,8 @@ const fromRow = (row: Record<string, unknown>): Vehicle => ({
   updatedAt: String(row.updated_at ?? ""),
 });
 
-const toRow = (vehicle: Vehicle) => ({
-  id: vehicle.id === "new" ? undefined : vehicle.id,
+const toRow = (vehicle: Vehicle, includeId = true) => ({
+  ...(includeId && vehicle.id !== "new" ? { id: vehicle.id } : {}),
   slug: vehicle.slug,
   name: vehicle.name,
   model: vehicle.model,
@@ -88,14 +88,14 @@ export async function getVehicles(): Promise<Vehicle[]> {
 }
 
 export async function createVehicle(vehicle: Vehicle): Promise<Vehicle> {
-  const { data, error } = await createClient().from("vehicles").insert(toRow(vehicle)).select().single();
-  if (error) throw error;
+  const { data, error } = await createClient().from("vehicles").insert(toRow(vehicle, false)).select().single();
+  if (error) throw new Error(`Vehicle save failed: ${error.message}${error.details ? ` (${error.details})` : ""}`);
   return fromRow(data);
 }
 
 export async function updateVehicle(vehicle: Vehicle): Promise<Vehicle> {
   const { data, error } = await createClient().from("vehicles").update(toRow(vehicle)).eq("id", vehicle.id).select().single();
-  if (error) throw error;
+  if (error) throw new Error(`Vehicle update failed: ${error.message}${error.details ? ` (${error.details})` : ""}`);
   return fromRow(data);
 }
 

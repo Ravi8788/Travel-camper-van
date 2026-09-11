@@ -1,9 +1,10 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Drawer, ButtonLink, NavItem } from "@/components/ui";
 import { PUBLIC_NAV_LINKS } from "@/lib/constants";
 import { getSettings } from "@/lib/data";
+import { createClient } from "@/utils/supabase/client";
 import { Logo } from "./Logo";
 import { MessageCircle, Phone } from "lucide-react";
 
@@ -15,7 +16,19 @@ export function MobileNav({
   onClose: () => void;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const settings = getSettings();
+
+  const handleBookClick = async () => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      router.push("/login?next=%2Fbook");
+      return;
+    }
+    router.push("/book");
+    onClose();
+  };
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -49,16 +62,22 @@ export function MobileNav({
         <ButtonLink href="/admin/login" onClick={onClose} variant="ghost" className="w-full" size="md">
           Admin Login
         </ButtonLink>
-        <ButtonLink href="/book" onClick={onClose} className="w-full" size="lg">
+        <button
+          type="button"
+          onClick={() => void handleBookClick()}
+          className="inline-flex h-[3.25rem] w-full items-center justify-center rounded-xl bg-accent-500 px-8 text-base font-semibold text-white transition-all duration-300 hover:bg-accent-600"
+        >
           Book Your Van
-        </ButtonLink>
+        </button>
 
         <a
-          href="#whatsapp"
+          href={`https://wa.me/${settings.whatsappNumber.replace(/\D/g, "")}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-3 rounded-xl border border-sand-200 px-4 py-3 text-sm font-medium text-ink hover:bg-sand-50 transition-colors"
         >
           <MessageCircle className="h-5 w-5 text-forest-600" />
-          WhatsApp-style help
+          Chat on WhatsApp
         </a>
 
         <a
