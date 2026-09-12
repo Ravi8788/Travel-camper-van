@@ -1473,8 +1473,18 @@ function AdminUtilityBar() {
           <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-orange-500" />
         </button>
         {open && (
-          <div className="absolute right-0 z-20 mt-2 w-72 rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
-            <p className="text-sm font-semibold">Notifications</p>
+          <div className="absolute right-0 z-20 mt-2 w-[min(18rem,calc(100vw-2rem))] rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold">Notifications</p>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="rounded-md p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                aria-label="Close notifications"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
             <p className="mt-2 border-b border-slate-100 pb-2 text-xs text-slate-600">
               New booking and payment updates will appear here.
             </p>

@@ -369,6 +369,11 @@
     @apply h-screen overflow-hidden bg-sand-100;
   }
 
+  .customer-shell footer,
+  .admin-shell footer {
+    display: none;
+  }
+
   .customer-panel {
     @apply h-screen overflow-hidden;
   }
