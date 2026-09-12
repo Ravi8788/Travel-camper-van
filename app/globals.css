@@ -493,7 +493,31 @@
       margin-top: 0.25rem;
     }
 
-    /* Admin mobile (PRESERVED EXACTLY) */
+    .customer-panel > div.flex-1 {
+      padding-top: 0.75rem;
+      padding-bottom: 4.5rem;
+    }
+
+    .customer-panel > div.flex-1 > div {
+      height: 100%;
+    }
+
+    .customer-panel > div.flex-1 main {
+      min-height: 0;
+      height: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Admin mobile */
+    .admin-shell > div {
+      min-height: 0;
+    }
+
+    .admin-shell > div > header,
+    .admin-shell > div > .admin-utility-bar {
+      flex-shrink: 0;
+    }
+
     .admin-shell main {
       padding: 0.75rem;
     }

@@ -1535,7 +1535,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="admin-shell h-screen overflow-hidden bg-[#f1f2ef] text-ink">
+    <div className="admin-shell flex h-screen min-h-0 flex-col overflow-hidden bg-[#f1f2ef] text-ink">
       <aside className="fixed inset-y-0 left-0 hidden h-screen w-60 overflow-y-auto border-r border-slate-200 bg-white p-4 pb-16 lg:block">
         <div className="border-b border-slate-200 pb-6">
           <p className="font-display text-xl font-bold">TOW / Admin</p>
@@ -1588,7 +1588,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
       </aside>
-      <div className="flex h-screen flex-col lg:pl-60">
+      <div className="flex min-h-0 flex-1 flex-col lg:pl-60">
         <header className="border-b border-slate-200 bg-white">
           <Container className="flex h-16 items-center justify-between px-3 sm:px-4">
             <div>
@@ -1618,7 +1618,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </nav>
         </header>
         <AdminUtilityBar />
-        <div className="flex-1 overflow-y-auto">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
           <div className="mx-auto w-full max-w-[1480px] px-2.5 sm:px-3">{children}</div>
         </div>
       </div>

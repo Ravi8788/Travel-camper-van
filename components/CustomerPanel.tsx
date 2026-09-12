@@ -124,7 +124,7 @@ export function CustomerPanel() {
   };
 
   return (
-    <div className="customer-panel h-screen overflow-hidden bg-sand-100/70 text-ink">
+    <div className="customer-panel flex h-screen min-h-0 flex-col overflow-hidden bg-sand-100/70 text-ink">
       {/* Header Bar */}
       <header className="sticky top-0 z-30 border-b border-sand-200/80 bg-[#f3ede3]/95 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-[1500px] items-center justify-between px-3 py-3 sm:px-4">
@@ -211,8 +211,8 @@ export function CustomerPanel() {
       </header>
 
       {/* Main Container Layout */}
-      <div className="mx-auto w-full max-w-[1500px] px-3 py-4 sm:px-4 sm:py-5">
-        <div className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1500px] flex-1 px-3 py-4 sm:px-4 sm:py-5">
+        <div className="grid min-h-0 w-full gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
           {/* Desktop Left Sidebar */}
           <aside className="hidden h-[calc(100vh-128px)] overflow-hidden lg:block">
             <nav className="sticky top-24 h-full space-y-1 overflow-y-auto rounded-2xl border border-sand-200/80 bg-[#f3ede3] p-2.5 shadow-soft">
@@ -251,7 +251,7 @@ export function CustomerPanel() {
           </aside>
 
           {/* Main Content Area */}
-          <main className="min-w-0 overflow-y-auto pb-24 lg:h-[calc(100vh-128px)] lg:pb-6">
+          <main className="min-h-0 min-w-0 overflow-y-auto overscroll-contain pb-24 lg:h-[calc(100vh-128px)] lg:pb-6">
             {section === "Dashboard" && (
               <Dashboard
                 booking={booking}
