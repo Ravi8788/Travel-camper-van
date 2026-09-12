@@ -23,15 +23,15 @@ function AuthShell({ eyebrow, title, subtitle, children, variant }: AuthShellPro
   const isAdmin = variant === "admin";
 
   return (
-    <PageContent className={`${isAdmin ? "auth-admin-page" : "auth-customer-page"} h-screen overflow-hidden px-0 py-3 sm:py-5`}>
-      <Container className="h-full">
-        <div className="mb-3 flex justify-end">
-          <ButtonLink href="/" variant="outline" size="sm" className="h-9 px-3 text-xs font-semibold">
+    <PageContent className={`${isAdmin ? "auth-admin-page" : "auth-customer-page"} auth-page-scroll relative h-[100svh] max-h-[100svh] overflow-y-auto px-2 py-2 sm:px-5 sm:py-5`}>
+      <Container className="h-auto min-h-full max-w-6xl px-0">
+        <div className="mb-1.5 flex justify-end sm:mb-3">
+          <ButtonLink href="/" variant="outline" size="sm" className="h-8 bg-white/70 px-2.5 text-xs font-semibold backdrop-blur-sm">
             View site
           </ButtonLink>
         </div>
-        <Card className={`auth-shell mx-auto grid h-[calc(100vh-7rem)] max-w-5xl overflow-hidden border-0 shadow-elevated lg:grid-cols-[0.9fr_1.1fr] ${isAdmin ? "bg-slate-950" : "bg-sand-50"}`} padding="none">
-          <div className="auth-visual relative hidden h-full min-h-[560px] overflow-hidden p-8 text-white lg:flex lg:flex-col lg:justify-between sm:p-10">
+        <Card className={`auth-shell mx-auto grid h-auto min-h-[calc(100svh-4rem)] w-full overflow-hidden rounded-2xl border-0 shadow-elevated lg:grid-cols-[0.9fr_1.1fr] ${isAdmin ? "bg-slate-950" : "bg-sand-50"}`} padding="none">
+          <div className="auth-visual relative hidden h-full min-h-[520px] overflow-hidden p-6 text-white lg:flex lg:flex-col lg:justify-between sm:p-8">
             <div className="auth-grid absolute inset-0 opacity-30" />
             <div className="auth-orbit absolute -right-24 top-20 h-80 w-80 rounded-full border border-accent-300/40" />
             <div className="auth-orbit auth-orbit-delay absolute -bottom-32 -left-28 h-96 w-96 rounded-full border-[18px] border-white/10" />
@@ -46,12 +46,12 @@ function AuthShell({ eyebrow, title, subtitle, children, variant }: AuthShellPro
             </div>
             <div className="relative z-10 flex items-center gap-3 text-xs text-white/60"><span className="h-2 w-2 rounded-full bg-accent-400" /> Mahabaleshwar · Panchgani · Tapola</div>
           </div>
-          <div className="bg-sand-50 p-6 sm:p-10 lg:p-14">
-            <div className="mb-8 lg:hidden"><p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-accent-600"><Compass className="h-4 w-4" /> Travel On Wheels</p></div>
+          <div className="bg-sand-50 p-4 sm:p-7 lg:p-10">
+            <div className="mb-4 lg:hidden"><p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-accent-600"><Compass className="h-4 w-4" /> Travel On Wheels</p></div>
             <p className={`eyebrow ${isAdmin ? "text-slate-500" : ""}`}>{isAdmin ? "Operations workspace" : eyebrow}</p>
-            <h1 className="mt-3 max-w-md font-display text-4xl font-bold leading-[0.95] tracking-tight sm:text-5xl">{title}</h1>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-sand-500">{subtitle}</p>
-            <div className="mt-8">{children}</div>
+            <h1 className="mt-2 max-w-md font-display text-3xl font-bold leading-[0.98] tracking-tight sm:mt-3 sm:text-5xl">{title}</h1>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-sand-500">{subtitle}</p>
+            <div className="mt-5">{children}</div>
           </div>
         </Card>
       </Container>
@@ -166,15 +166,11 @@ export function CustomerLoginPage() {
           </a>
         </div>
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full" loading={loading}>
           {loading ? "Signing in..." : "Log in"}
           <ArrowRight className="h-4 w-4" />
         </Button>
 
-        <Button type="button" variant="outline" className="w-full" onClick={() => void handleDemoLogin()} disabled={loading}>
-          Continue with demo customer
-        </Button>
-        <p className="text-center text-xs text-sand-500">Demo: {DEMO_CUSTOMER_EMAIL} / {DEMO_CUSTOMER_PASSWORD}</p>
       </form>
     </AuthShell>
   );
@@ -346,7 +342,7 @@ export function CustomerRegisterPage() {
           </div>
         )}
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full" loading={loading}>
           {loading ? "Creating account..." : "Create account"}
           <ArrowRight className="h-4 w-4" />
         </Button>
@@ -417,7 +413,7 @@ export function CustomerForgotPasswordPage() {
           </div>
         )}
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full" loading={loading}>
           {loading ? "Sending..." : "Send reset link"}
           <ArrowRight className="h-4 w-4" />
         </Button>
@@ -523,7 +519,7 @@ export function AdminLoginPage() {
           </div>
         )}
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full" loading={loading}>
           {loading ? "Signing in..." : "Sign in"}
           <ArrowRight className="h-4 w-4" />
         </Button>

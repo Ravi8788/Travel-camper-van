@@ -56,5 +56,8 @@ export default async function CatchAllPage({ params, searchParams }: { params: P
   const liveSections = ["customers", "bookings", "reviews", "offers", "availability", "pricing", "settings"];
   if (isAdminRoute && slug[1] && liveSections.includes(slug[1])) return <main className="admin-shell"><LiveAdminModule section={slug[1] as Section} /></main>;
   if (isAdminRoute) return <main className="admin-shell"><PlatformScreen slug={slug} /></main>;
+  if (["login", "register", "forgot-password"].includes(path) || path === "admin/login") {
+    return <main className="auth-route"><PlatformScreen slug={slug} /></main>;
+  }
   return <><Header /><main><PlatformScreen slug={slug} /></main><Footer /><WhatsAppCTA /></>;
 }

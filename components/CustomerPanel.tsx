@@ -165,14 +165,14 @@ export function CustomerPanel() {
               href="/"
               variant="outline"
               size="sm"
-              className="h-9 px-3 text-xs font-semibold"
+              className="h-9 px-2.5 text-[11px] font-semibold sm:px-3 sm:text-xs"
             >
-              <span className="hidden sm:inline">View site</span>
+              View site
             </ButtonLink>
             <button
               type="button"
               onClick={() => void handleLogout()}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-sand-200 bg-sand-50 px-3 text-xs font-semibold text-ink transition-colors hover:bg-sand-100"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-sand-200 bg-sand-50 px-2.5 text-[11px] font-semibold text-ink transition-colors hover:bg-sand-100 sm:px-3 sm:text-xs"
             >
               <LogOut className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Log out</span>
@@ -180,34 +180,6 @@ export function CustomerPanel() {
           </div>
         </div>
 
-        {/* Horizontal Mobile Tabs Bar */}
-        <div className="border-t border-sand-200/60 bg-[#f3ede3]/70 px-3 py-2 lg:hidden">
-          <div className="flex gap-1.5 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {sections.map(([label, Icon]) => {
-              const active = section === label;
-              return (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => go(label)}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
-                    active
-                      ? "bg-forest-700 text-sand-50 shadow-xs"
-                      : "bg-sand-50 text-ink/70 hover:bg-sand-200/70 border border-sand-200/60"
-                  }`}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  <span>{label}</span>
-                  {label === "Notifications" && (
-                    <span className="rounded-full bg-accent-500 px-1.5 py-0.2 text-[9px] font-bold text-white">
-                      3
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
       </header>
 
       {/* Main Container Layout */}
@@ -283,7 +255,7 @@ export function CustomerPanel() {
       </div>
 
       {/* Floating Bottom Bar for Mobile Screen Fitting */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t border-sand-200/90 bg-[#f3ede3]/95 px-1.5 py-1.5 backdrop-blur-lg shadow-elevated lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t border-sand-200/90 bg-[#f3ede3]/95 px-1 py-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] backdrop-blur-lg shadow-elevated lg:hidden">
         {[
           { label: "Dashboard", short: "Home", icon: Home },
           { label: "My Bookings", short: "Bookings", icon: BookOpen },
@@ -296,7 +268,7 @@ export function CustomerPanel() {
               key={label}
               type="button"
               onClick={() => go(label as SectionName)}
-              className={`flex flex-col items-center gap-1 px-3 py-1 text-[11px] font-medium transition-colors ${
+              className={`flex min-w-0 flex-1 flex-col items-center gap-1 px-1 py-1 text-[10px] font-medium transition-colors ${
                 active ? "text-accent-600 font-bold" : "text-sand-500"
               }`}
             >
@@ -308,7 +280,7 @@ export function CustomerPanel() {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(true)}
-          className={`flex flex-col items-center gap-1 px-3 py-1 text-[11px] font-medium transition-colors ${
+          className={`flex min-w-0 flex-1 flex-col items-center gap-1 px-1 py-1 text-[10px] font-medium transition-colors ${
             mobileMenuOpen ? "text-accent-600 font-bold" : "text-sand-500"
           }`}
         >
@@ -320,7 +292,7 @@ export function CustomerPanel() {
       {/* Mobile "More" Slide-up Drawer */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex items-end bg-black/50 backdrop-blur-xs lg:hidden">
-          <div className="w-full max-h-[80vh] overflow-y-auto rounded-t-3xl border-t border-sand-200 bg-sand-50 p-5 shadow-elevated">
+          <div className="w-full max-h-[80vh] overflow-y-auto rounded-t-3xl border-t border-sand-200 bg-sand-50 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-elevated">
             <div className="flex items-center justify-between border-b border-sand-200/60 pb-3">
               <p className="font-display text-lg font-bold text-ink">
                 All Portal Sections
@@ -371,7 +343,7 @@ function Metric({
     <Card className="customer-metric overflow-hidden border-sand-200/90 bg-sand-50 shadow-soft">
       <CardContent className="p-4 sm:p-5">
         <p className="text-xs font-medium text-sand-500">{label}</p>
-        <p className="mt-1 font-display text-2xl sm:text-3xl font-bold tracking-tight text-ink">
+        <p className="mt-1 break-words font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
           {value}
         </p>
         {note && (
@@ -402,7 +374,7 @@ function Dashboard({
   return (
     <div className="space-y-5 animate-fade-in">
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Metric
           label="Total Trips"
           value={customer.totalBookings}
@@ -413,7 +385,7 @@ function Dashboard({
           value="1 Document"
           note="Tap to upload"
         />
-        <div className="col-span-2 sm:col-span-1">
+        <div>
           <Metric
             label="Saved Vans"
             value={savedVans.length}

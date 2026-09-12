@@ -288,6 +288,23 @@
     animation: scale-in 0.55s var(--ease-editorial) both;
   }
 
+  .auth-route {
+    min-height: 100svh;
+    overflow-x: hidden;
+  }
+
+  .auth-page-scroll {
+    min-height: 100svh;
+    height: 100svh;
+    max-height: 100svh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .auth-page-scroll .auth-shell {
+    height: auto;
+  }
+
   .auth-customer-page {
     background: linear-gradient(135deg, #f8f6f1 0%, #f1ece2 50%, #eee8db 100%);
   }
@@ -457,6 +474,54 @@
   /* ─── Responsive: mobile ─── */
 
   @media (max-width: 639px) {
+    .auth-route,
+    .auth-route .auth-customer-page,
+    .auth-route .auth-admin-page,
+    .auth-route .auth-page-scroll {
+      min-height: 100svh;
+      height: auto;
+      overflow-y: auto;
+    }
+
+    .auth-route .auth-shell {
+      height: auto;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .auth-route .auth-shell > .bg-sand-50 {
+      padding: 1rem;
+    }
+
+    .auth-route .auth-shell h1 {
+      font-size: 2.25rem;
+      line-height: 0.98;
+    }
+
+    .auth-route .auth-shell input,
+    .auth-route .auth-shell button:not([aria-label]) {
+      min-height: 2.75rem;
+    }
+
+    .auth-route .auth-shell form > .flex.items-center.justify-between {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .auth-route .auth-shell form > .flex.items-center.justify-between a {
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .auth-route .auth-shell form > :not([hidden]) ~ :not([hidden]) {
+      margin-top: 0.75rem;
+    }
+
+    .auth-route .auth-shell form {
+      padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+
     input[type="date"] {
       min-width: 0;
       width: 100%;
@@ -604,27 +669,12 @@
   }
 }
 
-/* ─── Global & Container Visible Scrollbars ─── */
+/* ─── Global scrollbar treatment ─── */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.35);
-  border-radius: 9999px;
-  border: 1px solid transparent;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.6);
+  width: 0;
+  height: 0;
 }
 
 * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
+  scrollbar-width: none;
 }

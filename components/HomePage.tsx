@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
-import { ArrowRight, BedDouble, ChefHat, Compass, Heart, PlugZap, Search, Star, ShieldCheck, Sparkles } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowRight, BedDouble, ChefHat, Compass, Heart, PlugZap, Search, Star, ShieldCheck, Sparkles, X } from "lucide-react";
 import { ButtonLink, Card, CardContent, Container, Input, Select, StatusBadge } from "@/components/ui";
 import { getOffers, getReviews } from "@/lib/data";
 import { formatCurrency } from "@/lib/utils";
@@ -441,13 +441,43 @@ export default function HomePage() {
 }
 
 function BookingSearchBar() {
+  const [open, setOpen] = useState(true);
+
+  if (!open) {
+    return (
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/95 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-accent-700 shadow-xl backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:bg-white sm:px-5 sm:text-sm"
+          aria-label="Open fleet search"
+        >
+          <Search className="h-4 w-4 text-accent-600" />
+          Open fleet search
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-2xl border border-white/50 bg-white/95 p-4 shadow-2xl backdrop-blur-xl text-ink sm:p-5">
       <div className="mb-3 flex items-center justify-between">
         <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent-700">
           <Search className="h-3.5 w-3.5 text-accent-600" /> Instant Fleet Search
         </span>
-        <span className="text-xs text-slate-500 hidden sm:inline">Self-drive • All-inclusive insurance</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-slate-500 hidden sm:inline">Self-drive • All-inclusive insurance</span>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-sand-100 hover:text-ink"
+            aria-label="Close fleet search"
+            title="Close fleet search"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-[1.1fr_1fr_1fr_0.7fr_auto] lg:items-end">
